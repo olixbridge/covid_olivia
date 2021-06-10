@@ -1,0 +1,1129 @@
+/*C2*/SET SCHEMA PUBLIC
+CREATE TABLE IF NOT EXISTS AL_CONFIGURATION ( PROPERTY_NAME VARCHAR(255) NOT NULL UNIQUE , PROPERTY_VALUE LONGVARCHAR ) 
+CREATE TABLE IF NOT EXISTS AL_GROUPS ( GROUP_NAME VARCHAR(255) NOT NULL PRIMARY KEY , DESCRIPTION LONGVARCHAR ) 
+CREATE TABLE IF NOT EXISTS AL_TABLES ( TABLE_NAME VARCHAR(255) NOT NULL PRIMARY KEY , GROUP_NAME VARCHAR(255) , DESCRIPTION LONGVARCHAR ) 
+CREATE TABLE IF NOT EXISTS AL_CUSTOM_TYPE ( TABLE_NAME VARCHAR(255) , COLUMN_NAME VARCHAR(255) , TYPE VARCHAR(255) , NAME VARCHAR(255) ) 
+CREATE TABLE IF NOT EXISTS AL_VIEWS ( VIEW_NAME VARCHAR(255) NOT NULL UNIQUE , VIEW_DEFINITION LONGVARCHAR , IS_VALID BOOLEAN ) 
+CREATE TABLE IF NOT EXISTS AL_SELECTED_LOG_OBJECTS ( NAME VARCHAR(255) NOT NULL UNIQUE , TYPE VARCHAR(255) ) 
+CREATE TABLE IF NOT EXISTS AL_DB_OBJECTS ( NAME VARCHAR(255) NOT NULL UNIQUE , TYPE VARCHAR(255) , USAGE VARCHAR(255) ) 
+/*C3*/SET SCHEMA PUBLIC
+DROP VIEW trace_log IF EXISTS CASCADE
+DROP VIEW histograms_log IF EXISTS CASCADE
+DROP VIEW datasets_log IF EXISTS CASCADE
+DROP VIEW statistics_log IF EXISTS CASCADE
+DROP VIEW agent_type_statechart_stats_log IF EXISTS CASCADE
+DROP VIEW agent_statechart_stats_log IF EXISTS CASCADE
+DROP VIEW agent_statechart_states_log IF EXISTS CASCADE
+DROP VIEW statechart_transitions_log IF EXISTS CASCADE
+DROP VIEW fluid_utilization_log IF EXISTS CASCADE
+DROP VIEW fluid_rates_log IF EXISTS CASCADE
+DROP VIEW fluid_storages_log IF EXISTS CASCADE
+DROP VIEW fluid_units_log IF EXISTS CASCADE
+DROP VIEW resource_unit_utilization_log IF EXISTS CASCADE
+DROP VIEW resource_pool_utilization_log IF EXISTS CASCADE
+DROP VIEW resource_pool_task_stats_log IF EXISTS CASCADE
+DROP VIEW resource_unit_task_stats_log IF EXISTS CASCADE
+DROP VIEW resource_unit_states_log IF EXISTS CASCADE
+DROP VIEW flowchart_stats_time_in_state_log IF EXISTS CASCADE
+DROP VIEW flowchart_process_states_log IF EXISTS CASCADE
+DROP VIEW flowchart_entries_log IF EXISTS CASCADE
+DROP VIEW events_log IF EXISTS CASCADE
+DROP VIEW agent_messages_log IF EXISTS CASCADE
+DROP VIEW agent_movement_stats_log IF EXISTS CASCADE
+DROP VIEW agent_movement_log IF EXISTS CASCADE
+DROP VIEW library_block_parameters_log IF EXISTS CASCADE
+DROP VIEW agent_parameters_log IF EXISTS CASCADE
+DROP VIEW library_blocks_log IF EXISTS CASCADE
+DROP VIEW agents_log IF EXISTS CASCADE
+DROP TABLE fluid_utilization_raw_log IF EXISTS CASCADE
+DROP TABLE fluid_rates_raw_log IF EXISTS CASCADE
+DROP TABLE fluid_storages_raw_log IF EXISTS CASCADE
+DROP TABLE fluid_units_raw_log IF EXISTS CASCADE
+DROP TABLE resource_unit_utilization_raw_log IF EXISTS CASCADE
+DROP TABLE resource_pool_utilization_raw_log IF EXISTS CASCADE
+DROP TABLE resource_unit_states_raw_log IF EXISTS CASCADE
+DROP TABLE histograms_raw_log IF EXISTS CASCADE
+DROP TABLE datasets_raw_log IF EXISTS CASCADE
+DROP TABLE statistics_raw_log IF EXISTS CASCADE
+DROP TABLE flowchart_process_states_raw_log IF EXISTS CASCADE
+DROP TABLE flowchart_entries_raw_log IF EXISTS CASCADE
+DROP TABLE agent_messages_raw_log IF EXISTS CASCADE
+DROP TABLE agent_movement_raw_log IF EXISTS CASCADE
+DROP TABLE events_raw_log IF EXISTS CASCADE
+DROP TABLE statechart_transitions_raw_log IF EXISTS CASCADE
+DROP TABLE statechart_states_raw_log IF EXISTS CASCADE
+DROP TABLE trace_raw_log IF EXISTS CASCADE
+DROP TABLE agent_elements_raw_log IF EXISTS CASCADE
+DROP TABLE agent_type_statecharts_raw_log IF EXISTS CASCADE
+DROP TABLE agent_type_elements_raw_log IF EXISTS CASCADE
+DROP TABLE agent_parameters_raw_log IF EXISTS CASCADE
+DROP TABLE destroyed_agents_raw_log IF EXISTS CASCADE
+DROP TABLE agents_raw_log IF EXISTS CASCADE
+DROP TABLE agent_types_raw_log IF EXISTS CASCADE
+DROP FUNCTION al_format_agent_name_log IF EXISTS CASCADE
+DROP FUNCTION al_format_agent_type_name_log IF EXISTS CASCADE
+DELETE FROM AL_DB_OBJECTS WHERE NAME='al_format_agent_type_name_log' AND TYPE='FUNCTION' AND USAGE='LOG'
+DELETE FROM AL_DB_OBJECTS WHERE NAME='al_format_agent_name_log' AND TYPE='FUNCTION' AND USAGE='LOG'
+DELETE FROM AL_DB_OBJECTS WHERE NAME='agent_types_raw_log' AND TYPE='TABLE' AND USAGE='LOG'
+DELETE FROM AL_DB_OBJECTS WHERE NAME='agents_raw_log' AND TYPE='TABLE' AND USAGE='LOG'
+DELETE FROM AL_DB_OBJECTS WHERE NAME='destroyed_agents_raw_log' AND TYPE='TABLE' AND USAGE='LOG'
+DELETE FROM AL_DB_OBJECTS WHERE NAME='agent_parameters_raw_log' AND TYPE='TABLE' AND USAGE='LOG'
+DELETE FROM AL_DB_OBJECTS WHERE NAME='agent_type_elements_raw_log' AND TYPE='TABLE' AND USAGE='LOG'
+DELETE FROM AL_DB_OBJECTS WHERE NAME='agent_type_statecharts_raw_log' AND TYPE='TABLE' AND USAGE='LOG'
+DELETE FROM AL_DB_OBJECTS WHERE NAME='agent_elements_raw_log' AND TYPE='TABLE' AND USAGE='LOG'
+DELETE FROM AL_DB_OBJECTS WHERE NAME='trace_raw_log' AND TYPE='TABLE' AND USAGE='LOG'
+DELETE FROM AL_DB_OBJECTS WHERE NAME='statechart_states_raw_log' AND TYPE='TABLE' AND USAGE='LOG'
+DELETE FROM AL_DB_OBJECTS WHERE NAME='statechart_transitions_raw_log' AND TYPE='TABLE' AND USAGE='LOG'
+DELETE FROM AL_DB_OBJECTS WHERE NAME='events_raw_log' AND TYPE='TABLE' AND USAGE='LOG'
+DELETE FROM AL_DB_OBJECTS WHERE NAME='agent_movement_raw_log' AND TYPE='TABLE' AND USAGE='LOG'
+DELETE FROM AL_DB_OBJECTS WHERE NAME='agent_messages_raw_log' AND TYPE='TABLE' AND USAGE='LOG'
+DELETE FROM AL_DB_OBJECTS WHERE NAME='flowchart_entries_raw_log' AND TYPE='TABLE' AND USAGE='LOG'
+DELETE FROM AL_DB_OBJECTS WHERE NAME='flowchart_process_states_raw_log' AND TYPE='TABLE' AND USAGE='LOG'
+DELETE FROM AL_DB_OBJECTS WHERE NAME='statistics_raw_log' AND TYPE='TABLE' AND USAGE='LOG'
+DELETE FROM AL_DB_OBJECTS WHERE NAME='datasets_raw_log' AND TYPE='TABLE' AND USAGE='LOG'
+DELETE FROM AL_DB_OBJECTS WHERE NAME='histograms_raw_log' AND TYPE='TABLE' AND USAGE='LOG'
+DELETE FROM AL_DB_OBJECTS WHERE NAME='resource_unit_states_raw_log' AND TYPE='TABLE' AND USAGE='LOG'
+DELETE FROM AL_DB_OBJECTS WHERE NAME='resource_pool_utilization_raw_log' AND TYPE='TABLE' AND USAGE='LOG'
+DELETE FROM AL_DB_OBJECTS WHERE NAME='resource_unit_utilization_raw_log' AND TYPE='TABLE' AND USAGE='LOG'
+DELETE FROM AL_DB_OBJECTS WHERE NAME='fluid_units_raw_log' AND TYPE='TABLE' AND USAGE='LOG'
+DELETE FROM AL_DB_OBJECTS WHERE NAME='fluid_storages_raw_log' AND TYPE='TABLE' AND USAGE='LOG'
+DELETE FROM AL_DB_OBJECTS WHERE NAME='fluid_rates_raw_log' AND TYPE='TABLE' AND USAGE='LOG'
+DELETE FROM AL_DB_OBJECTS WHERE NAME='fluid_utilization_raw_log' AND TYPE='TABLE' AND USAGE='LOG'
+DELETE FROM AL_DB_OBJECTS WHERE NAME='agents_log' AND TYPE='VIEW' AND USAGE='LOG'
+DELETE FROM AL_DB_OBJECTS WHERE NAME='library_blocks_log' AND TYPE='VIEW' AND USAGE='LOG'
+DELETE FROM AL_DB_OBJECTS WHERE NAME='agent_parameters_log' AND TYPE='VIEW' AND USAGE='LOG'
+DELETE FROM AL_DB_OBJECTS WHERE NAME='library_block_parameters_log' AND TYPE='VIEW' AND USAGE='LOG'
+DELETE FROM AL_DB_OBJECTS WHERE NAME='agent_movement_log' AND TYPE='VIEW' AND USAGE='LOG'
+DELETE FROM AL_DB_OBJECTS WHERE NAME='agent_movement_stats_log' AND TYPE='VIEW' AND USAGE='LOG'
+DELETE FROM AL_DB_OBJECTS WHERE NAME='agent_messages_log' AND TYPE='VIEW' AND USAGE='LOG'
+DELETE FROM AL_DB_OBJECTS WHERE NAME='events_log' AND TYPE='VIEW' AND USAGE='LOG'
+DELETE FROM AL_DB_OBJECTS WHERE NAME='flowchart_entries_log' AND TYPE='VIEW' AND USAGE='LOG'
+DELETE FROM AL_DB_OBJECTS WHERE NAME='flowchart_process_states_log' AND TYPE='VIEW' AND USAGE='LOG'
+DELETE FROM AL_DB_OBJECTS WHERE NAME='flowchart_stats_time_in_state_log' AND TYPE='VIEW' AND USAGE='LOG'
+DELETE FROM AL_DB_OBJECTS WHERE NAME='resource_unit_states_log' AND TYPE='VIEW' AND USAGE='LOG'
+DELETE FROM AL_DB_OBJECTS WHERE NAME='resource_unit_task_stats_log' AND TYPE='VIEW' AND USAGE='LOG'
+DELETE FROM AL_DB_OBJECTS WHERE NAME='resource_pool_task_stats_log' AND TYPE='VIEW' AND USAGE='LOG'
+DELETE FROM AL_DB_OBJECTS WHERE NAME='resource_pool_utilization_log' AND TYPE='VIEW' AND USAGE='LOG'
+DELETE FROM AL_DB_OBJECTS WHERE NAME='resource_unit_utilization_log' AND TYPE='VIEW' AND USAGE='LOG'
+DELETE FROM AL_DB_OBJECTS WHERE NAME='fluid_units_log' AND TYPE='VIEW' AND USAGE='LOG'
+DELETE FROM AL_DB_OBJECTS WHERE NAME='fluid_storages_log' AND TYPE='VIEW' AND USAGE='LOG'
+DELETE FROM AL_DB_OBJECTS WHERE NAME='fluid_rates_log' AND TYPE='VIEW' AND USAGE='LOG'
+DELETE FROM AL_DB_OBJECTS WHERE NAME='fluid_utilization_log' AND TYPE='VIEW' AND USAGE='LOG'
+DELETE FROM AL_DB_OBJECTS WHERE NAME='statechart_transitions_log' AND TYPE='VIEW' AND USAGE='LOG'
+DELETE FROM AL_DB_OBJECTS WHERE NAME='agent_statechart_states_log' AND TYPE='VIEW' AND USAGE='LOG'
+DELETE FROM AL_DB_OBJECTS WHERE NAME='agent_statechart_stats_log' AND TYPE='VIEW' AND USAGE='LOG'
+DELETE FROM AL_DB_OBJECTS WHERE NAME='agent_type_statechart_stats_log' AND TYPE='VIEW' AND USAGE='LOG'
+DELETE FROM AL_DB_OBJECTS WHERE NAME='statistics_log' AND TYPE='VIEW' AND USAGE='LOG'
+DELETE FROM AL_DB_OBJECTS WHERE NAME='datasets_log' AND TYPE='VIEW' AND USAGE='LOG'
+DELETE FROM AL_DB_OBJECTS WHERE NAME='histograms_log' AND TYPE='VIEW' AND USAGE='LOG'
+DELETE FROM AL_DB_OBJECTS WHERE NAME='trace_log' AND TYPE='VIEW' AND USAGE='LOG'
+COMMIT
+CREATE FUNCTION al_format_agent_type_name_log (agentType LONGVARCHAR) RETURNS LONGVARCHAR\u000aBEGIN ATOMIC\u000a\u0009DECLARE dotIndex INT;\u000a\u0009SET dotIndex = LOCATE ('.', REVERSE (agentType));\u000a\u0009IF dotIndex = 0 THEN\u000a\u0009\u0009RETURN agentType;\u000a\u0009END IF;\u000a\u0009RETURN REVERSE (SUBSTRING (REVERSE (agentType), 0, dotIndex));\u000aEND
+INSERT INTO AL_DB_OBJECTS VALUES('al_format_agent_type_name_log','FUNCTION','LOG')
+COMMIT
+CREATE FUNCTION al_format_agent_name_log (name LONGVARCHAR, id INT) RETURNS LONGVARCHAR\u000aBEGIN ATOMIC\u000a\u0009DECLARE index INT;\u000a\u0009DECLARE result LONGVARCHAR;\u000a\u0009SET result = name;\u000a\u0009SET index = LOCATE ('root.', name);\u000a\u0009IF index = 1 THEN\u000a\u0009\u0009SET result = SUBSTRING (result, LENGTH('root.') + 1, LENGTH(result));\u000a\u0009END IF;\u000a\u0009SET index = LOCATE('[', result);\u0009IF index > 0 THEN\u000a\u0009\u0009SET result = CONCAT (result, ' : ', id);\u000a\u0009END IF;\u000a\u0009RETURN result;\u000aEND
+INSERT INTO AL_DB_OBJECTS VALUES('al_format_agent_name_log','FUNCTION','LOG')
+COMMIT
+CREATE CACHED TABLE IF NOT EXISTS agent_types_raw_log (ID INT PRIMARY KEY, NAME VARCHAR(255))
+INSERT INTO AL_DB_OBJECTS VALUES('agent_types_raw_log','TABLE','LOG')
+COMMIT
+CREATE CACHED TABLE IF NOT EXISTS agents_raw_log (ID INT PRIMARY KEY, AGENT_TYPE_ID INT, NAME VARCHAR(255), DATE TIMESTAMP, CONSTRAINT AGENT_TYPE_REF FOREIGN KEY (AGENT_TYPE_ID) REFERENCES agent_types_raw_log(Id))
+INSERT INTO AL_DB_OBJECTS VALUES('agents_raw_log','TABLE','LOG')
+COMMIT
+CREATE CACHED TABLE IF NOT EXISTS destroyed_agents_raw_log (AGENT_ID INT, DATE TIMESTAMP, CONSTRAINT DESTROYED_AGENT_REF FOREIGN KEY (AGENT_ID) REFERENCES agents_raw_log(Id))
+INSERT INTO AL_DB_OBJECTS VALUES('destroyed_agents_raw_log','TABLE','LOG')
+COMMIT
+CREATE CACHED TABLE IF NOT EXISTS agent_parameters_raw_log (AGENT_ID INT, PARAMETER_NAME VARCHAR(255), PARAMETER_VALUE LONGVARCHAR, CONSTRAINT AGENT_PARAMETERS_AGENT_REF FOREIGN KEY (AGENT_ID) REFERENCES agents_raw_log(Id))
+INSERT INTO AL_DB_OBJECTS VALUES('agent_parameters_raw_log','TABLE','LOG')
+COMMIT
+CREATE CACHED TABLE IF NOT EXISTS agent_type_elements_raw_log (ID INT PRIMARY KEY, AGENT_TYPE_ID INT, NAME VARCHAR(255), CONSTRAINT ELEMENT_TO_AGENT_TYPE_REF FOREIGN KEY (AGENT_TYPE_ID) REFERENCES agent_types_raw_log(Id))
+INSERT INTO AL_DB_OBJECTS VALUES('agent_type_elements_raw_log','TABLE','LOG')
+COMMIT
+CREATE CACHED TABLE IF NOT EXISTS agent_type_statecharts_raw_log (STATECHART_ID INT, ELEMENT_ID INT, CONSTRAINT STATECHARTS_STATECHART_TO_ELEMENT_REF FOREIGN KEY (STATECHART_ID) REFERENCES agent_type_elements_raw_log(Id),CONSTRAINT STATECHARTS_ELEMENT_TO_ELEMENT_REF FOREIGN KEY (ELEMENT_ID) REFERENCES agent_type_elements_raw_log(Id))
+INSERT INTO AL_DB_OBJECTS VALUES('agent_type_statecharts_raw_log','TABLE','LOG')
+COMMIT
+CREATE CACHED TABLE IF NOT EXISTS agent_elements_raw_log (ID INT PRIMARY KEY, AGENT_ID INT, NAME VARCHAR(255), CONSTRAINT ELEMENT_TO_AGENT_REF FOREIGN KEY (AGENT_ID) REFERENCES agents_raw_log(Id))
+INSERT INTO AL_DB_OBJECTS VALUES('agent_elements_raw_log','TABLE','LOG')
+COMMIT
+CREATE CACHED TABLE IF NOT EXISTS trace_raw_log (COUNTER INT GENERATED BY DEFAULT AS IDENTITY, AGENT_ID INT, DATE TIMESTAMP, MESSAGE_TEXT LONGVARCHAR, CONSTRAINT TRACE_LOG_AGENT_REF FOREIGN KEY (AGENT_ID) REFERENCES agents_raw_log(Id))
+INSERT INTO AL_DB_OBJECTS VALUES('trace_raw_log','TABLE','LOG')
+COMMIT
+CREATE CACHED TABLE IF NOT EXISTS statechart_states_raw_log (AGENT_ID INT, STATE_ID INT, ENTRY_DATE TIMESTAMP, EXIT_DATE TIMESTAMP, CONSTRAINT STATECHART_STATES_AGENT_REF FOREIGN KEY (AGENT_ID) REFERENCES agents_raw_log(ID),CONSTRAINT STATECHART_STATES_STATE_REF FOREIGN KEY (STATE_ID) REFERENCES agent_type_elements_raw_log(ID))
+INSERT INTO AL_DB_OBJECTS VALUES('statechart_states_raw_log','TABLE','LOG')
+COMMIT
+CREATE CACHED TABLE IF NOT EXISTS statechart_transitions_raw_log (AGENT_ID INT, TRANSITION_ID INT, FROM_STATE_ID INT, DATE TIMESTAMP, CONSTRAINT STATECHART_AGENT_REF FOREIGN KEY (AGENT_ID) REFERENCES agents_raw_log(ID),CONSTRAINT TRANSITION_REF FOREIGN KEY (TRANSITION_ID) REFERENCES agent_type_elements_raw_log(ID),CONSTRAINT FROM_STATE_REF FOREIGN KEY (FROM_STATE_ID) REFERENCES agent_type_elements_raw_log(ID))
+INSERT INTO AL_DB_OBJECTS VALUES('statechart_transitions_raw_log','TABLE','LOG')
+COMMIT
+CREATE CACHED TABLE IF NOT EXISTS events_raw_log (EVENT_ID INT, DATE TIMESTAMP, CONSTRAINT EVENT_REF FOREIGN KEY (EVENT_ID) REFERENCES agent_type_elements_raw_log(ID))
+INSERT INTO AL_DB_OBJECTS VALUES('events_raw_log','TABLE','LOG')
+COMMIT
+CREATE CACHED TABLE IF NOT EXISTS agent_movement_raw_log (AGENT_ID INT, SPEED FLOAT, START_DATE TIMESTAMP, STOP_DATE TIMESTAMP, CONSTRAINT MOVEMENT_AGENT_REF FOREIGN KEY (AGENT_ID) REFERENCES agents_raw_log(ID))
+INSERT INTO AL_DB_OBJECTS VALUES('agent_movement_raw_log','TABLE','LOG')
+COMMIT
+CREATE CACHED TABLE IF NOT EXISTS agent_messages_raw_log (AGENT_ID INT, SENDER_ID INT, MESSAGE LONGVARCHAR, DATE TIMESTAMP, COUNTER INT GENERATED BY DEFAULT AS IDENTITY, CONSTRAINT MESSAGES_AGENT_REF FOREIGN KEY (AGENT_ID) REFERENCES agents_raw_log(ID),CONSTRAINT MESSAGES_SENDER_AGENT_REF FOREIGN KEY (SENDER_ID) REFERENCES agents_raw_log(ID))
+INSERT INTO AL_DB_OBJECTS VALUES('agent_messages_raw_log','TABLE','LOG')
+COMMIT
+CREATE CACHED TABLE IF NOT EXISTS flowchart_entries_raw_log (COUNTER INT GENERATED BY DEFAULT AS IDENTITY, AGENT_ID INT, BLOCK_ID INT, ENTRY_DATE TIMESTAMP, CONSTRAINT FLOWCHART_ENTRIES_ENTITY_AGENT_REF FOREIGN KEY (AGENT_ID) REFERENCES agents_raw_log(ID),CONSTRAINT FLOWCHART_ENTRIES_BLOCK_AGENT_REF FOREIGN KEY (BLOCK_ID) REFERENCES agents_raw_log(ID))
+INSERT INTO AL_DB_OBJECTS VALUES('flowchart_entries_raw_log','TABLE','LOG')
+COMMIT
+CREATE CACHED TABLE IF NOT EXISTS flowchart_process_states_raw_log (AGENT_ID INT, BLOCK_ID INT, ACTIVITY_TYPE VARCHAR(20), START_DATE TIMESTAMP, STOP_DATE TIMESTAMP, CONSTRAINT FLOWCHART_PROCESS_STATES_ENTITY_AGENT_REF FOREIGN KEY (AGENT_ID) REFERENCES agents_raw_log(ID),CONSTRAINT FLOWCHART_PROCESS_STATES_BLOCK_AGENT_REF FOREIGN KEY (BLOCK_ID) REFERENCES agents_raw_log(ID))
+INSERT INTO AL_DB_OBJECTS VALUES('flowchart_process_states_raw_log','TABLE','LOG')
+COMMIT
+CREATE CACHED TABLE IF NOT EXISTS statistics_raw_log (AGENT_ID INT, NAME VARCHAR(255), MEAN FLOAT, DEVIATION FLOAT, MINIMUM FLOAT, MAXIMUM FLOAT, MEAN_CONFIDENCE FLOAT, NUMBER INT, CONSTRAINT STATISTICS_AGENT_REF FOREIGN KEY (AGENT_ID) REFERENCES agents_raw_log(ID))
+INSERT INTO AL_DB_OBJECTS VALUES('statistics_raw_log','TABLE','LOG')
+COMMIT
+CREATE CACHED TABLE IF NOT EXISTS datasets_raw_log (ELEMENT_ID INT, INDEX INT, X FLOAT, Y FLOAT, CONSTRAINT DATASETS_ELEMENT_REF FOREIGN KEY (ELEMENT_ID) REFERENCES agent_elements_raw_log(ID))
+INSERT INTO AL_DB_OBJECTS VALUES('datasets_raw_log','TABLE','LOG')
+COMMIT
+CREATE CACHED TABLE IF NOT EXISTS histograms_raw_log (ELEMENT_ID INT, START FLOAT, END FLOAT, PDF FLOAT, CDF FLOAT, CONSTRAINT HISTOGRAMS_ELEMENT_REF FOREIGN KEY (ELEMENT_ID) REFERENCES agent_elements_raw_log(ID))
+INSERT INTO AL_DB_OBJECTS VALUES('histograms_raw_log','TABLE','LOG')
+COMMIT
+CREATE CACHED TABLE IF NOT EXISTS resource_unit_states_raw_log (UNIT_ID INT, POOL_ID INT, USAGE_STATE VARCHAR(20), TASK_TYPE VARCHAR(20), AGENT_ID INT, TASK_ID INT, START_DATE TIMESTAMP, STOP_DATE TIMESTAMP, CONSTRAINT RESOURCE_UNIT_STATES_UNIT_AGENT_REF FOREIGN KEY (UNIT_ID) REFERENCES agents_raw_log(ID),CONSTRAINT RESOURCE_UNIT_STATES_POOL_AGENT_REF FOREIGN KEY (POOL_ID) REFERENCES agents_raw_log(ID),CONSTRAINT RESOURCE_UNIT_STATES_AGENT_AGENT_REF FOREIGN KEY (AGENT_ID) REFERENCES agents_raw_log(ID),CONSTRAINT RESOURCE_UNIT_STATES_TASK_AGENT_REF FOREIGN KEY (TASK_ID) REFERENCES agents_raw_log(ID))
+INSERT INTO AL_DB_OBJECTS VALUES('resource_unit_states_raw_log','TABLE','LOG')
+COMMIT
+CREATE CACHED TABLE IF NOT EXISTS resource_pool_utilization_raw_log (POOL_ID INT, UTILIZATION FLOAT, SIZE INT, CONSTRAINT RESOURCE_POOL_UTILIZATION_POOL_AGENT_REF FOREIGN KEY (POOL_ID) REFERENCES agents_raw_log(ID))
+INSERT INTO AL_DB_OBJECTS VALUES('resource_pool_utilization_raw_log','TABLE','LOG')
+COMMIT
+CREATE CACHED TABLE IF NOT EXISTS resource_unit_utilization_raw_log (UNIT_ID INT, POOL_ID INT, UTILIZATION FLOAT, CONSTRAINT RESOURCE_UNIT_UTILIZATION_UNIT_AGENT_REF FOREIGN KEY (UNIT_ID) REFERENCES agents_raw_log(ID),CONSTRAINT RESOURCE_UNIT_UTILIZATION_POOL_AGENT_REF FOREIGN KEY (POOL_ID) REFERENCES agents_raw_log(ID))
+INSERT INTO AL_DB_OBJECTS VALUES('resource_unit_utilization_raw_log','TABLE','LOG')
+COMMIT
+CREATE CACHED TABLE IF NOT EXISTS fluid_units_raw_log (BLOCK_ID INT, AMOUNT_UNITS VARCHAR(20), RATE_UNITS VARCHAR(20), CONSTRAINT FLUID_UNITS_BLOCK_AGENT_REF FOREIGN KEY (BLOCK_ID) REFERENCES agents_raw_log(ID))
+INSERT INTO AL_DB_OBJECTS VALUES('fluid_units_raw_log','TABLE','LOG')
+COMMIT
+CREATE CACHED TABLE IF NOT EXISTS fluid_storages_raw_log (BLOCK_ID INT, MINIMUM FLOAT, MAXIMUM FLOAT, AVERAGE FLOAT, CONSTRAINT FLUID_STORAGES_BLOCK_AGENT_REF FOREIGN KEY (BLOCK_ID) REFERENCES agents_raw_log(ID))
+INSERT INTO AL_DB_OBJECTS VALUES('fluid_storages_raw_log','TABLE','LOG')
+COMMIT
+CREATE CACHED TABLE IF NOT EXISTS fluid_rates_raw_log (BLOCK_ID INT, PORT VARCHAR(20), TOTAL FLOAT, MINIMUM FLOAT, MAXIMUM FLOAT, AVERAGE FLOAT, CONSTRAINT FLUID_RATES_BLOCK_AGENT_REF FOREIGN KEY (BLOCK_ID) REFERENCES agents_raw_log(ID))
+INSERT INTO AL_DB_OBJECTS VALUES('fluid_rates_raw_log','TABLE','LOG')
+COMMIT
+CREATE CACHED TABLE IF NOT EXISTS fluid_utilization_raw_log (BLOCK_ID INT, UTILIZATION FLOAT, CONSTRAINT FLUID_UTILIZATION_BLOCK_AGENT_REF FOREIGN KEY (BLOCK_ID) REFERENCES agents_raw_log(ID))
+INSERT INTO AL_DB_OBJECTS VALUES('fluid_utilization_raw_log','TABLE','LOG')
+COMMIT
+CREATE VIEW agents_log AS SELECT al_format_agent_type_name_log(agent_types.NAME) type, al_format_agent_name_log(agents.NAME, agents.ID) name, agents.DATE BirthDate, destroyed_agents.DATE DeathDate FROM agent_types_raw_log agent_types INNER JOIN agents_raw_log agents ON agent_types.ID = agents.AGENT_TYPE_ID LEFT JOIN destroyed_agents_raw_log destroyed_agents ON agents.ID = destroyed_agents.AGENT_ID WHERE agent_types.NAME NOT LIKE 'com.anylogic.libraries.%' ORDER BY type, name
+INSERT INTO AL_DB_OBJECTS VALUES('agents_log','VIEW','LOG')
+COMMIT
+CREATE VIEW library_blocks_log AS SELECT al_format_agent_type_name_log(agent_types.NAME) type, al_format_agent_name_log(agents.NAME, agents.ID) name, agents.DATE BirthDate, destroyed_agents.DATE DeathDate FROM agent_types_raw_log agent_types INNER JOIN agents_raw_log agents ON agent_types.ID = agents.AGENT_TYPE_ID LEFT JOIN destroyed_agents_raw_log destroyed_agents ON agents.ID = destroyed_agents.AGENT_ID WHERE agent_types.NAME LIKE 'com.anylogic.libraries.%' ORDER BY type, name
+INSERT INTO AL_DB_OBJECTS VALUES('library_blocks_log','VIEW','LOG')
+COMMIT
+CREATE VIEW agent_parameters_log AS SELECT al_format_agent_type_name_log(agent_types.NAME) agent_type, al_format_agent_name_log(agents.NAME, agents.ID) agent, parameters.PARAMETER_NAME parameter_name, parameters.PARAMETER_VALUE parameter_value FROM agent_parameters_raw_log parameters INNER JOIN agents_raw_log agents ON parameters.AGENT_ID = agents.ID INNER JOIN agent_types_raw_log agent_types ON agents.AGENT_TYPE_ID = agent_types.ID WHERE agent_types.NAME NOT LIKE 'com.anylogic.libraries.%' ORDER BY agent_type, agent
+INSERT INTO AL_DB_OBJECTS VALUES('agent_parameters_log','VIEW','LOG')
+COMMIT
+CREATE VIEW library_block_parameters_log AS SELECT al_format_agent_type_name_log(agent_types.NAME) block_type, al_format_agent_name_log(agents.NAME, agents.ID) block, parameters.PARAMETER_NAME parameter_name, parameters.PARAMETER_VALUE parameter_value FROM agent_parameters_raw_log parameters INNER JOIN agents_raw_log agents ON parameters.AGENT_ID = agents.ID INNER JOIN agent_types_raw_log agent_types ON agents.AGENT_TYPE_ID = agent_types.ID WHERE agent_types.NAME LIKE 'com.anylogic.libraries.%' ORDER BY block_type, block
+INSERT INTO AL_DB_OBJECTS VALUES('library_block_parameters_log','VIEW','LOG')
+COMMIT
+CREATE VIEW agent_movement_log AS SELECT al_format_agent_type_name_log(agent_types.NAME) type, al_format_agent_name_log(agents.NAME, agents.ID) agent, agent_movement.SPEED speed, agent_movement.START_DATE start_date, agent_movement.STOP_DATE stop_date FROM agent_movement_raw_log agent_movement INNER JOIN agents_raw_log agents ON agent_movement.AGENT_ID = agents.ID INNER JOIN agent_types_raw_log agent_types ON agents.AGENT_TYPE_ID = agent_types.ID ORDER BY start_date
+INSERT INTO AL_DB_OBJECTS VALUES('agent_movement_log','VIEW','LOG')
+COMMIT
+CREATE VIEW agent_movement_stats_log AS SELECT al_format_agent_type_name_log(agent_types.NAME) type, al_format_agent_name_log(agents.NAME, agents.ID) agent, agent_movement.total_meters total_meters, agent_movement.total_seconds total_seconds, agent_movement.avg_speed_mps avg_speed_mps FROM (   SELECT     AGENT_ID,     SUM(CAST( DATEDIFF('millisecond', START_DATE, STOP_DATE) AS DOUBLE ) * SPEED) / 1000 total_meters,     SUM(CAST( DATEDIFF('millisecond', START_DATE, STOP_DATE) AS DOUBLE )) / 1000 total_seconds,     SUM(CAST( DATEDIFF('millisecond', START_DATE, STOP_DATE) AS DOUBLE ) * SPEED)       / SUM(CAST( DATEDIFF('millisecond', START_DATE, STOP_DATE) AS DOUBLE )) avg_speed_mps   FROM agent_movement_raw_log   GROUP BY AGENT_ID) agent_movement INNER JOIN agents_raw_log agents ON agent_movement.AGENT_ID = agents.ID INNER JOIN agent_types_raw_log agent_types ON agents.AGENT_TYPE_ID = agent_types.ID ORDER BY type, agent
+INSERT INTO AL_DB_OBJECTS VALUES('agent_movement_stats_log','VIEW','LOG')
+COMMIT
+CREATE VIEW agent_messages_log AS SELECT am.MESSAGE message, al_format_agent_name_log(a1.NAME, a1.ID) recipient, al_format_agent_type_name_log(at1.NAME) recipient_type, al_format_agent_name_log(a2.NAME, a2.ID) sender, al_format_agent_type_name_log(at2.NAME) sender_type, am.DATE date, am.COUNTER counter FROM agent_messages_raw_log am INNER JOIN agents_raw_log a1 ON am.AGENT_ID = a1.ID INNER JOIN agent_types_raw_log at1 ON a1.AGENT_TYPE_ID = at1.ID LEFT JOIN agents_raw_log a2 ON am.SENDER_ID = a2.ID LEFT JOIN agent_types_raw_log at2 ON a2.AGENT_TYPE_ID = at2.ID ORDER BY am.COUNTER
+INSERT INTO AL_DB_OBJECTS VALUES('agent_messages_log','VIEW','LOG')
+COMMIT
+CREATE VIEW events_log AS SELECT agent_type_elements.NAME event_name, events.DATE date, al_format_agent_type_name_log(agent_types.NAME) agent_type, al_format_agent_name_log(agents.NAME, agents.ID) agent FROM events_raw_log events INNER JOIN agent_type_elements_raw_log agent_type_elements ON events.EVENT_ID = agent_type_elements.ID INNER JOIN agents_raw_log agents ON agent_type_elements.AGENT_TYPE_ID = agents.ID INNER JOIN agent_types_raw_log agent_types ON agent_type_elements.AGENT_TYPE_ID = agent_types.ID ORDER BY events.DATE
+INSERT INTO AL_DB_OBJECTS VALUES('events_log','VIEW','LOG')
+COMMIT
+CREATE VIEW flowchart_entries_log AS SELECT \u0009flowchart_entries.COUNTER counter, \u0009al_format_agent_type_name_log(agent_types.NAME) agent_type, \u0009al_format_agent_name_log(agents.NAME, agents.ID) agent, \u0009al_format_agent_type_name_log(block_types.NAME) block_type, \u0009al_format_agent_name_log(blocks.NAME, blocks.ID) block, \u0009flowchart_entries.ENTRY_DATE entry_date FROM flowchart_entries_raw_log flowchart_entries INNER JOIN agents_raw_log agents ON flowchart_entries.AGENT_ID = agents.ID INNER JOIN agent_types_raw_log agent_types ON agents.AGENT_TYPE_ID = agent_types.ID LEFT JOIN agents_raw_log blocks ON flowchart_entries.BLOCK_ID = blocks.ID LEFT JOIN agent_types_raw_log block_types ON blocks.AGENT_TYPE_ID = block_types.ID ORDER BY flowchart_entries.ENTRY_DATE
+INSERT INTO AL_DB_OBJECTS VALUES('flowchart_entries_log','VIEW','LOG')
+COMMIT
+CREATE VIEW flowchart_process_states_log AS SELECT al_format_agent_type_name_log(agent_types.NAME) agent_type, al_format_agent_name_log(agents.NAME, agents.ID) agent, al_format_agent_type_name_log(block_types.NAME) block_type, al_format_agent_name_log(blocks.NAME, blocks.ID) block, flowchart_process_states.ACTIVITY_TYPE activity_type, flowchart_process_states.START_DATE start_date, flowchart_process_states.STOP_DATE stop_date FROM flowchart_process_states_raw_log flowchart_process_states INNER JOIN agents_raw_log agents ON flowchart_process_states.AGENT_ID = agents.ID INNER JOIN agent_types_raw_log agent_types ON agents.AGENT_TYPE_ID = agent_types.ID INNER JOIN agents_raw_log blocks ON flowchart_process_states.BLOCK_ID = blocks.ID INNER JOIN agent_types_raw_log block_types ON blocks.AGENT_TYPE_ID = block_types.ID ORDER BY flowchart_process_states.START_DATE
+INSERT INTO AL_DB_OBJECTS VALUES('flowchart_process_states_log','VIEW','LOG')
+COMMIT
+CREATE VIEW flowchart_stats_time_in_state_log AS SELECT al_format_agent_type_name_log(block_types.NAME) block_type, al_format_agent_name_log(blocks.NAME, blocks.ID) block, flowchart_process_states.activity_type activity_type, flowchart_process_states.mean_seconds mean_seconds, flowchart_process_states.total_seconds total_seconds, flowchart_process_states.min_seconds min_seconds, flowchart_process_states.max_seconds max_seconds, flowchart_process_states.n_agents n_agents FROM (   SELECT     BLOCK_ID block_id,     ACTIVITY_TYPE activity_type,     AVG(CAST( DATEDIFF('millisecond', START_DATE, STOP_DATE) AS DOUBLE )) / 1000 mean_seconds,     SUM(CAST( DATEDIFF('millisecond', START_DATE, STOP_DATE) AS DOUBLE )) / 1000 total_seconds,     MIN(CAST( DATEDIFF('millisecond', START_DATE, STOP_DATE) AS DOUBLE )) / 1000 min_seconds,     MAX(CAST( DATEDIFF('millisecond', START_DATE, STOP_DATE) AS DOUBLE )) / 1000 max_seconds,     COUNT( DISTINCT AGENT_ID ) n_agents   FROM flowchart_process_states_raw_log flowchart_process_states   GROUP BY BLOCK_ID, ACTIVITY_TYPE) flowchart_process_states INNER JOIN agents_raw_log blocks ON flowchart_process_states.BLOCK_ID = blocks.ID INNER JOIN agent_types_raw_log block_types ON blocks.AGENT_TYPE_ID = block_types.ID ORDER BY block_type, block, activity_type
+INSERT INTO AL_DB_OBJECTS VALUES('flowchart_stats_time_in_state_log','VIEW','LOG')
+COMMIT
+CREATE VIEW resource_unit_states_log AS SELECT al_format_agent_type_name_log(unit_types.NAME) unit_type, al_format_agent_name_log(units.NAME, units.ID) unit, al_format_agent_name_log(pools.NAME, pools.ID) resource_pool, resource_unit_states.USAGE_STATE usage_state, CASE WHEN resource_unit_states.TASK_TYPE = 'TASK_CUSTOM' THEN al_format_agent_name_log(tasks.NAME, tasks.ID) ELSE resource_unit_states.TASK_TYPE END task, al_format_agent_type_name_log(agent_types.NAME) agent_type, al_format_agent_name_log(agents.NAME, agents.ID) agent, resource_unit_states.START_DATE start_date, resource_unit_states.STOP_DATE stop_date FROM resource_unit_states_raw_log resource_unit_states INNER JOIN agents_raw_log units ON resource_unit_states.UNIT_ID = units.ID INNER JOIN agent_types_raw_log unit_types ON units.AGENT_TYPE_ID = unit_types.ID INNER JOIN agents_raw_log pools ON resource_unit_states.POOL_ID = pools.ID LEFT JOIN agents_raw_log agents ON resource_unit_states.AGENT_ID = agents.ID LEFT JOIN agent_types_raw_log agent_types ON agents.AGENT_TYPE_ID = agent_types.ID LEFT JOIN agents_raw_log tasks ON resource_unit_states.TASK_ID = tasks.ID ORDER BY resource_unit_states.START_DATE
+INSERT INTO AL_DB_OBJECTS VALUES('resource_unit_states_log','VIEW','LOG')
+COMMIT
+CREATE VIEW resource_unit_task_stats_log AS SELECT al_format_agent_type_name_log(unit_types.NAME) unit_type, al_format_agent_name_log(pools.NAME, pools.ID) resource_pool, al_format_agent_name_log(units.NAME, units.ID) unit, CASE WHEN resource_unit_states.TASK_TYPE = 'TASK_CUSTOM' THEN al_format_agent_name_log(tasks.NAME, tasks.ID) ELSE resource_unit_states.TASK_TYPE END task, resource_unit_states.mean_seconds mean_seconds, resource_unit_states.total_seconds total_seconds, resource_unit_states.n_tasks n_tasks FROM (   SELECT     UNIT_ID unit_id,     POOL_ID pool_id,     TASK_TYPE task_type,     TASK_ID task_id,     AVG(CAST( DATEDIFF('millisecond', START_DATE, STOP_DATE) AS DOUBLE )) / 1000 mean_seconds,     SUM(CAST( DATEDIFF('millisecond', START_DATE, STOP_DATE) AS DOUBLE )) / 1000 total_seconds,     COUNT(START_DATE) n_tasks   FROM resource_unit_states_raw_log   GROUP BY UNIT_ID, POOL_ID, TASK_TYPE, TASK_ID ) resource_unit_states INNER JOIN agents_raw_log units ON resource_unit_states.UNIT_ID = units.ID INNER JOIN agent_types_raw_log unit_types ON units.AGENT_TYPE_ID = unit_types.ID INNER JOIN agents_raw_log pools ON resource_unit_states.POOL_ID = pools.ID LEFT JOIN agents_raw_log tasks ON resource_unit_states.TASK_ID = tasks.ID ORDER BY unit_type, resource_pool, unit, resource_unit_states.TASK_TYPE, tasks.NAME
+INSERT INTO AL_DB_OBJECTS VALUES('resource_unit_task_stats_log','VIEW','LOG')
+COMMIT
+CREATE VIEW resource_pool_task_stats_log AS SELECT al_format_agent_type_name_log(unit_types.NAME) unit_type, al_format_agent_name_log(pools.NAME, pools.ID) resource_pool, CASE WHEN resource_unit_states.TASK_TYPE = 'TASK_CUSTOM' THEN tasks.NAME ELSE resource_unit_states.TASK_TYPE END task, resource_unit_states.mean_seconds mean_seconds, resource_unit_states.total_seconds total_seconds, resource_unit_states.n_tasks n_tasks FROM (   SELECT     u.AGENT_TYPE_ID unit_type_id,     s.POOL_ID pool_id,     s.TASK_TYPE task_type,     s.TASK_ID task_id,     AVG(CAST( DATEDIFF('millisecond', s.START_DATE, s.STOP_DATE) AS DOUBLE )) / 1000 mean_seconds,     SUM(CAST( DATEDIFF('millisecond', s.START_DATE, s.STOP_DATE) AS DOUBLE )) / 1000 total_seconds,     COUNT(s.START_DATE) n_tasks   FROM resource_unit_states_raw_log s   INNER JOIN agents_raw_log u ON s.UNIT_ID = u.ID   GROUP BY u.AGENT_TYPE_ID, s.POOL_ID, s.TASK_TYPE, s.TASK_ID ) resource_unit_states INNER JOIN agent_types_raw_log unit_types ON resource_unit_states.unit_type_id = unit_types.ID INNER JOIN agents_raw_log pools ON resource_unit_states.POOL_ID = pools.ID LEFT JOIN agents_raw_log tasks ON resource_unit_states.TASK_ID = tasks.ID ORDER BY unit_type, resource_pool, resource_unit_states.TASK_TYPE, tasks.NAME
+INSERT INTO AL_DB_OBJECTS VALUES('resource_pool_task_stats_log','VIEW','LOG')
+COMMIT
+CREATE VIEW resource_pool_utilization_log AS SELECT al_format_agent_name_log(pools.NAME, pools.ID) resource_pool, resource_pool_utilization.UTILIZATION utilization, resource_pool_utilization.SIZE size FROM resource_pool_utilization_raw_log resource_pool_utilization INNER JOIN agents_raw_log pools ON resource_pool_utilization.POOL_ID = pools.ID ORDER BY resource_pool
+INSERT INTO AL_DB_OBJECTS VALUES('resource_pool_utilization_log','VIEW','LOG')
+COMMIT
+CREATE VIEW resource_unit_utilization_log AS SELECT al_format_agent_type_name_log(unit_types.NAME) unit_type, al_format_agent_name_log(pools.NAME, pools.ID) resource_pool, al_format_agent_name_log(units.NAME, units.ID) unit, resource_unit_utilization.UTILIZATION utilization FROM resource_unit_utilization_raw_log resource_unit_utilization INNER JOIN agents_raw_log units ON resource_unit_utilization.UNIT_ID = units.ID INNER JOIN agent_types_raw_log unit_types ON units.AGENT_TYPE_ID = unit_types.ID INNER JOIN agents_raw_log pools ON resource_unit_utilization.POOL_ID = pools.ID ORDER BY unit_type, resource_pool
+INSERT INTO AL_DB_OBJECTS VALUES('resource_unit_utilization_log','VIEW','LOG')
+COMMIT
+CREATE VIEW fluid_units_log AS SELECT al_format_agent_type_name_log(block_types.NAME) block_type, al_format_agent_name_log(blocks.NAME, blocks.ID) block, units.AMOUNT_UNITS amount_units, units.RATE_UNITS rate_units FROM fluid_units_raw_log units INNER JOIN agents_raw_log blocks ON units.BLOCK_ID = blocks.ID INNER JOIN agent_types_raw_log block_types ON blocks.AGENT_TYPE_ID = block_types.ID ORDER BY block_type, block
+INSERT INTO AL_DB_OBJECTS VALUES('fluid_units_log','VIEW','LOG')
+COMMIT
+CREATE VIEW fluid_storages_log AS SELECT al_format_agent_type_name_log(block_types.NAME) block_type, al_format_agent_name_log(blocks.NAME, blocks.ID) block, storages.MINIMUM minimum, storages.MAXIMUM maximum, storages.AVERAGE average FROM fluid_storages_raw_log storages INNER JOIN agents_raw_log blocks ON storages.BLOCK_ID = blocks.ID INNER JOIN agent_types_raw_log block_types ON blocks.AGENT_TYPE_ID = block_types.ID ORDER BY block_type, block
+INSERT INTO AL_DB_OBJECTS VALUES('fluid_storages_log','VIEW','LOG')
+COMMIT
+CREATE VIEW fluid_rates_log AS SELECT al_format_agent_type_name_log(block_types.NAME) block_type, al_format_agent_name_log(blocks.NAME, blocks.ID) block, rates.PORT port, rates.TOTAL total_amount,rates.MINIMUM minimum_rate, rates.MAXIMUM maximum_rate, rates.AVERAGE average_rate FROM fluid_rates_raw_log rates INNER JOIN agents_raw_log blocks ON rates.BLOCK_ID = blocks.ID INNER JOIN agent_types_raw_log block_types ON blocks.AGENT_TYPE_ID = block_types.ID ORDER BY block_type, block
+INSERT INTO AL_DB_OBJECTS VALUES('fluid_rates_log','VIEW','LOG')
+COMMIT
+CREATE VIEW fluid_utilization_log AS SELECT al_format_agent_type_name_log(block_types.NAME) block_type, al_format_agent_name_log(blocks.NAME, blocks.ID) block, utilization.UTILIZATION utilization FROM fluid_utilization_raw_log utilization INNER JOIN agents_raw_log blocks ON utilization.BLOCK_ID = blocks.ID INNER JOIN agent_types_raw_log block_types ON blocks.AGENT_TYPE_ID = block_types.ID ORDER BY block_type, block
+INSERT INTO AL_DB_OBJECTS VALUES('fluid_utilization_log','VIEW','LOG')
+COMMIT
+CREATE VIEW statechart_transitions_log AS SELECT al_format_agent_type_name_log(agent_types.NAME) agent_type, al_format_agent_name_log(agents.NAME, agents.ID) agent, transitions.NAME transition, states.NAME from_state, statechart_transitions.DATE date FROM statechart_transitions_raw_log statechart_transitions INNER JOIN agents_raw_log agents ON statechart_transitions.AGENT_ID = agents.ID INNER JOIN agent_types_raw_log agent_types ON agents.AGENT_TYPE_ID = agent_types.ID LEFT JOIN agent_type_elements_raw_log transitions ON statechart_transitions.TRANSITION_ID = transitions.ID INNER JOIN agent_type_elements_raw_log states ON statechart_transitions.FROM_STATE_ID = states.ID ORDER BY statechart_transitions.DATE
+INSERT INTO AL_DB_OBJECTS VALUES('statechart_transitions_log','VIEW','LOG')
+COMMIT
+CREATE VIEW agent_statechart_states_log AS SELECT al_format_agent_type_name_log(agent_types.NAME) agent_type, al_format_agent_name_log(agents.NAME, agents.ID) agent, elements_statecharts.NAME statechart, elements_states.NAME state, statechart_states.ENTRY_DATE entry_date, statechart_states.EXIT_DATE exit_date FROM statechart_states_raw_log statechart_states INNER JOIN agents_raw_log agents ON statechart_states.AGENT_ID = agents.ID INNER JOIN agent_types_raw_log agent_types ON agents.AGENT_TYPE_ID = agent_types.ID INNER JOIN agent_type_statecharts_raw_log agent_type_statecharts ON agent_type_statecharts.ELEMENT_ID = statechart_states.STATE_ID INNER JOIN agent_type_elements_raw_log elements_statecharts ON agent_type_statecharts.STATECHART_ID = elements_statecharts.ID INNER JOIN agent_type_elements_raw_log elements_states ON statechart_states.STATE_ID = elements_states.ID ORDER BY agent_type, agent, statechart, statechart_states.ENTRY_DATE
+INSERT INTO AL_DB_OBJECTS VALUES('agent_statechart_states_log','VIEW','LOG')
+COMMIT
+CREATE VIEW agent_statechart_stats_log AS SELECT al_format_agent_type_name_log(agent_types.NAME) agent_type, al_format_agent_name_log(agents.NAME, agents.ID) agent, elements_statecharts.NAME statechart, elements_states.NAME state, statechart_states.mean_seconds mean_seconds, statechart_states.total_seconds total_seconds, statechart_states.n_entries n_entries FROM (   SELECT     AGENT_ID agent_id,     STATE_ID state_id,     AVG(CAST( DATEDIFF('millisecond', ENTRY_DATE, EXIT_DATE) AS DOUBLE )) / 1000 mean_seconds,     SUM(CAST( DATEDIFF('millisecond', ENTRY_DATE, EXIT_DATE) AS DOUBLE )) / 1000 total_seconds,     COUNT(ENTRY_DATE) n_entries   FROM statechart_states_raw_log   GROUP BY AGENT_ID, STATE_ID ) statechart_states INNER JOIN agents_raw_log agents ON statechart_states.AGENT_ID = agents.ID INNER JOIN agent_types_raw_log agent_types ON agents.AGENT_TYPE_ID = agent_types.ID INNER JOIN agent_type_statecharts_raw_log agent_type_statecharts ON agent_type_statecharts.ELEMENT_ID = statechart_states.STATE_ID INNER JOIN agent_type_elements_raw_log elements_statecharts ON agent_type_statecharts.STATECHART_ID = elements_statecharts.ID INNER JOIN agent_type_elements_raw_log elements_states ON statechart_states.STATE_ID = elements_states.ID ORDER BY agent_type, agent, statechart, state
+INSERT INTO AL_DB_OBJECTS VALUES('agent_statechart_stats_log','VIEW','LOG')
+COMMIT
+CREATE VIEW agent_type_statechart_stats_log AS SELECT al_format_agent_type_name_log(agent_types.NAME) agent_type, elements_statecharts.NAME statechart, elements_states.NAME state, statechart_states.mean_seconds mean_seconds, statechart_states.total_seconds total_seconds, statechart_states.min_seconds min_seconds, statechart_states.max_seconds max_seconds, statechart_states.n_entries n_entries FROM (   SELECT     a.AGENT_TYPE_ID agent_type_id,     s.STATE_ID state_id,     AVG(CAST( DATEDIFF('millisecond', s.ENTRY_DATE, s.EXIT_DATE) AS DOUBLE )) / 1000 mean_seconds,     SUM(CAST( DATEDIFF('millisecond', s.ENTRY_DATE, s.EXIT_DATE) AS DOUBLE )) / 1000 total_seconds,     MIN(CAST( DATEDIFF('millisecond', s.ENTRY_DATE, s.EXIT_DATE) AS DOUBLE )) / 1000 min_seconds,     MAX(CAST( DATEDIFF('millisecond', s.ENTRY_DATE, s.EXIT_DATE) AS DOUBLE )) / 1000 max_seconds,     COUNT(s.ENTRY_DATE) n_entries   FROM statechart_states_raw_log s   INNER JOIN agents_raw_log a ON s.AGENT_ID = a.ID   GROUP BY a.AGENT_TYPE_ID, s.STATE_ID ) statechart_states INNER JOIN agent_types_raw_log agent_types ON statechart_states.agent_type_id = agent_types.ID INNER JOIN agent_type_statecharts_raw_log agent_type_statecharts ON agent_type_statecharts.ELEMENT_ID = statechart_states.STATE_ID INNER JOIN agent_type_elements_raw_log elements_statecharts ON agent_type_statecharts.STATECHART_ID = elements_statecharts.ID INNER JOIN agent_type_elements_raw_log elements_states ON statechart_states.STATE_ID = elements_states.ID ORDER BY agent_type, statechart, state
+INSERT INTO AL_DB_OBJECTS VALUES('agent_type_statechart_stats_log','VIEW','LOG')
+COMMIT
+CREATE VIEW statistics_log AS SELECT al_format_agent_type_name_log(agent_types.NAME) agent_type, al_format_agent_name_log(agents.NAME, agents.ID) agent, statistics.NAME name, statistics.MEAN mean, statistics.DEVIATION deviation, statistics.MINIMUM minimum, statistics.MAXIMUM maximum, statistics.MEAN_CONFIDENCE mean_confidence, statistics.NUMBER number FROM statistics_raw_log statistics LEFT JOIN agents_raw_log agents ON statistics.AGENT_ID = agents.ID LEFT JOIN agent_types_raw_log agent_types ON agents.AGENT_TYPE_ID = agent_types.ID ORDER BY agent_type, agent, statistics.NAME
+INSERT INTO AL_DB_OBJECTS VALUES('statistics_log','VIEW','LOG')
+COMMIT
+CREATE VIEW datasets_log AS SELECT al_format_agent_type_name_log(agent_types.NAME) agent_type, al_format_agent_name_log(agents.NAME, agents.ID) agent, agent_elements.NAME name, datasets.INDEX index, datasets.X x, datasets.Y y FROM datasets_raw_log datasets LEFT JOIN agent_elements_raw_log agent_elements ON datasets.ELEMENT_ID = agent_elements.ID LEFT JOIN agents_raw_log agents ON agent_elements.AGENT_ID = agents.ID LEFT JOIN agent_types_raw_log agent_types ON agents.AGENT_TYPE_ID = agent_types.ID ORDER BY agent_type, agent, agent_elements.NAME, datasets.INDEX
+INSERT INTO AL_DB_OBJECTS VALUES('datasets_log','VIEW','LOG')
+COMMIT
+CREATE VIEW histograms_log AS SELECT al_format_agent_type_name_log(agent_types.NAME) agent_type, al_format_agent_name_log(agents.NAME, agents.ID) agent, agent_elements.NAME name, histograms.START start, histograms.END end, histograms.PDF pdf, histograms.CDF cdf FROM histograms_raw_log histograms LEFT JOIN agent_elements_raw_log agent_elements ON histograms.ELEMENT_ID = agent_elements.ID LEFT JOIN agents_raw_log agents ON agent_elements.AGENT_ID = agents.ID LEFT JOIN agent_types_raw_log agent_types ON agents.AGENT_TYPE_ID = agent_types.ID ORDER BY agent_type, agent, agent_elements.NAME, histograms.START
+INSERT INTO AL_DB_OBJECTS VALUES('histograms_log','VIEW','LOG')
+COMMIT
+CREATE VIEW trace_log AS SELECT trace.MESSAGE_TEXT message_text, trace.DATE date, trace.COUNTER counter, al_format_agent_type_name_log(agent_types.NAME) agent_type, al_format_agent_name_log(agents.NAME, agents.ID) agent FROM trace_raw_log trace LEFT JOIN agents_raw_log agents ON trace.AGENT_ID = agents.ID LEFT JOIN agent_types_raw_log agent_types ON agents.AGENT_TYPE_ID = agent_types.ID ORDER BY trace.COUNTER
+INSERT INTO AL_DB_OBJECTS VALUES('trace_log','VIEW','LOG')
+COMMIT
+DELETE FROM RT WHERE AL_ID=12209
+DELETE FROM RT WHERE AL_ID=12210
+DELETE FROM RT WHERE AL_ID=12211
+DELETE FROM RT WHERE AL_ID=12212
+DELETE FROM RT WHERE AL_ID=12213
+DELETE FROM RT WHERE AL_ID=12214
+DELETE FROM RT WHERE AL_ID=12215
+DELETE FROM RT WHERE AL_ID=12216
+DELETE FROM RT WHERE AL_ID=12217
+DELETE FROM RT WHERE AL_ID=12218
+DELETE FROM RT WHERE AL_ID=12219
+DELETE FROM RT WHERE AL_ID=12220
+DELETE FROM RT WHERE AL_ID=12221
+DELETE FROM RT WHERE AL_ID=12222
+DELETE FROM RT WHERE AL_ID=12223
+DELETE FROM RT WHERE AL_ID=12224
+DELETE FROM RT WHERE AL_ID=12225
+DELETE FROM RT WHERE AL_ID=12226
+DELETE FROM RT WHERE AL_ID=12227
+DELETE FROM RT WHERE AL_ID=12228
+DELETE FROM RT WHERE AL_ID=12229
+DELETE FROM RT WHERE AL_ID=12230
+DELETE FROM RT WHERE AL_ID=12231
+DELETE FROM RT WHERE AL_ID=12232
+DELETE FROM RT WHERE AL_ID=12233
+DELETE FROM RT WHERE AL_ID=12234
+DELETE FROM RT WHERE AL_ID=12235
+DELETE FROM RT WHERE AL_ID=12236
+DELETE FROM RT WHERE AL_ID=12237
+DELETE FROM RT WHERE AL_ID=12238
+DELETE FROM RT WHERE AL_ID=12239
+DELETE FROM RT WHERE AL_ID=12240
+DELETE FROM RT WHERE AL_ID=12241
+DELETE FROM RT WHERE AL_ID=12242
+DELETE FROM RT WHERE AL_ID=12243
+DELETE FROM RT WHERE AL_ID=12244
+DELETE FROM RT WHERE AL_ID=12245
+DELETE FROM RT WHERE AL_ID=12246
+DELETE FROM RT WHERE AL_ID=12247
+DELETE FROM RT WHERE AL_ID=12248
+DELETE FROM RT WHERE AL_ID=12249
+DELETE FROM RT WHERE AL_ID=12250
+DELETE FROM RT WHERE AL_ID=12251
+DELETE FROM RT WHERE AL_ID=12252
+DELETE FROM RT WHERE AL_ID=12253
+DELETE FROM RT WHERE AL_ID=12254
+DELETE FROM RT WHERE AL_ID=12255
+DELETE FROM RT WHERE AL_ID=12256
+DELETE FROM RT WHERE AL_ID=12257
+DELETE FROM RT WHERE AL_ID=12258
+DELETE FROM RT WHERE AL_ID=12259
+DELETE FROM RT WHERE AL_ID=12260
+DELETE FROM RT WHERE AL_ID=12261
+DELETE FROM RT WHERE AL_ID=12262
+DELETE FROM RT WHERE AL_ID=12263
+DELETE FROM RT WHERE AL_ID=12264
+DELETE FROM RT WHERE AL_ID=12265
+DELETE FROM RT WHERE AL_ID=12266
+DELETE FROM RT WHERE AL_ID=12267
+DELETE FROM RT WHERE AL_ID=12268
+DELETE FROM RT WHERE AL_ID=12269
+DELETE FROM RT WHERE AL_ID=12270
+DELETE FROM RT WHERE AL_ID=12271
+DELETE FROM RT WHERE AL_ID=12272
+DELETE FROM RT WHERE AL_ID=12273
+DELETE FROM RT WHERE AL_ID=12274
+DELETE FROM RT WHERE AL_ID=12275
+DELETE FROM RT WHERE AL_ID=12276
+DELETE FROM RT WHERE AL_ID=12277
+DELETE FROM RT WHERE AL_ID=12278
+DELETE FROM RT WHERE AL_ID=12279
+DELETE FROM RT WHERE AL_ID=12280
+DELETE FROM RT WHERE AL_ID=12281
+DELETE FROM RT WHERE AL_ID=12282
+DELETE FROM RT WHERE AL_ID=12283
+DELETE FROM RT WHERE AL_ID=12284
+DELETE FROM RT WHERE AL_ID=12285
+DELETE FROM RT WHERE AL_ID=12286
+DELETE FROM RT WHERE AL_ID=12287
+DELETE FROM RT WHERE AL_ID=12288
+DELETE FROM RT WHERE AL_ID=12289
+DELETE FROM RT WHERE AL_ID=12290
+DELETE FROM RT WHERE AL_ID=12291
+DELETE FROM RT WHERE AL_ID=12292
+DELETE FROM RT WHERE AL_ID=12293
+DELETE FROM RT WHERE AL_ID=12294
+DELETE FROM RT WHERE AL_ID=12295
+DELETE FROM RT WHERE AL_ID=12296
+DELETE FROM RT WHERE AL_ID=12297
+DELETE FROM RT WHERE AL_ID=12298
+DELETE FROM RT WHERE AL_ID=12299
+DELETE FROM RT WHERE AL_ID=12300
+DELETE FROM RT WHERE AL_ID=12301
+DELETE FROM RT WHERE AL_ID=12302
+DELETE FROM RT WHERE AL_ID=12303
+DELETE FROM RT WHERE AL_ID=12304
+DELETE FROM RT WHERE AL_ID=12305
+DELETE FROM RT WHERE AL_ID=12306
+DELETE FROM RT WHERE AL_ID=12307
+DELETE FROM RT WHERE AL_ID=12308
+DELETE FROM RT WHERE AL_ID=12309
+DELETE FROM RT WHERE AL_ID=12310
+DELETE FROM RT WHERE AL_ID=12311
+DELETE FROM RT WHERE AL_ID=12312
+DELETE FROM RT WHERE AL_ID=12313
+DELETE FROM RT WHERE AL_ID=12314
+DELETE FROM RT WHERE AL_ID=12315
+DELETE FROM RT WHERE AL_ID=12316
+DELETE FROM RT WHERE AL_ID=12317
+DELETE FROM RT WHERE AL_ID=12318
+DELETE FROM RT WHERE AL_ID=12319
+DELETE FROM RT WHERE AL_ID=12320
+DELETE FROM RT WHERE AL_ID=12321
+DELETE FROM RT WHERE AL_ID=12322
+DELETE FROM RT WHERE AL_ID=12323
+DELETE FROM RT WHERE AL_ID=12324
+DELETE FROM RT WHERE AL_ID=12325
+DELETE FROM RT WHERE AL_ID=12326
+DELETE FROM RT WHERE AL_ID=12327
+DELETE FROM RT WHERE AL_ID=12328
+DELETE FROM RT WHERE AL_ID=12329
+DELETE FROM RT WHERE AL_ID=12330
+DELETE FROM RT WHERE AL_ID=12331
+DELETE FROM RT WHERE AL_ID=12332
+DELETE FROM RT WHERE AL_ID=12333
+DELETE FROM RT WHERE AL_ID=12334
+DELETE FROM RT WHERE AL_ID=12335
+DELETE FROM RT WHERE AL_ID=12336
+DELETE FROM RT WHERE AL_ID=12337
+DELETE FROM RT WHERE AL_ID=12338
+DELETE FROM RT WHERE AL_ID=12339
+DELETE FROM RT WHERE AL_ID=12340
+DELETE FROM RT WHERE AL_ID=12341
+DELETE FROM RT WHERE AL_ID=12342
+DELETE FROM RT WHERE AL_ID=12343
+DELETE FROM RT WHERE AL_ID=12344
+DELETE FROM RT WHERE AL_ID=12345
+DELETE FROM RT WHERE AL_ID=12346
+DELETE FROM RT WHERE AL_ID=12347
+DELETE FROM RT WHERE AL_ID=12348
+DELETE FROM RT WHERE AL_ID=12349
+DELETE FROM RT WHERE AL_ID=12350
+DELETE FROM RT WHERE AL_ID=12351
+DELETE FROM RT WHERE AL_ID=12352
+DELETE FROM RT WHERE AL_ID=12353
+DELETE FROM RT WHERE AL_ID=12354
+DELETE FROM RT WHERE AL_ID=12355
+DELETE FROM RT WHERE AL_ID=12356
+DELETE FROM RT WHERE AL_ID=12357
+DELETE FROM RT WHERE AL_ID=12358
+DELETE FROM RT WHERE AL_ID=12359
+DELETE FROM RT WHERE AL_ID=12360
+DELETE FROM RT WHERE AL_ID=12361
+DELETE FROM RT WHERE AL_ID=12362
+DELETE FROM RT WHERE AL_ID=12363
+DELETE FROM RT WHERE AL_ID=12364
+DELETE FROM RT WHERE AL_ID=12365
+DELETE FROM RT WHERE AL_ID=12366
+DELETE FROM RT WHERE AL_ID=12367
+DELETE FROM RT WHERE AL_ID=12368
+DELETE FROM RT WHERE AL_ID=12369
+DELETE FROM RT WHERE AL_ID=12370
+DELETE FROM RT WHERE AL_ID=12371
+DELETE FROM RT WHERE AL_ID=12372
+DELETE FROM RT WHERE AL_ID=12373
+DELETE FROM RT WHERE AL_ID=12374
+DELETE FROM RT WHERE AL_ID=12375
+DELETE FROM RT WHERE AL_ID=12376
+DELETE FROM RT WHERE AL_ID=12377
+DELETE FROM RT WHERE AL_ID=12378
+DELETE FROM RT WHERE AL_ID=12379
+DELETE FROM RT WHERE AL_ID=12380
+DELETE FROM RT WHERE AL_ID=12381
+DELETE FROM RT WHERE AL_ID=12382
+DELETE FROM RT WHERE AL_ID=12383
+DELETE FROM RT WHERE AL_ID=12384
+DELETE FROM RT WHERE AL_ID=12385
+DELETE FROM RT WHERE AL_ID=12386
+DELETE FROM RT WHERE AL_ID=12387
+DELETE FROM RT WHERE AL_ID=12388
+DELETE FROM RT WHERE AL_ID=12389
+DELETE FROM RT WHERE AL_ID=12390
+DELETE FROM RT WHERE AL_ID=12391
+DELETE FROM RT WHERE AL_ID=12392
+DELETE FROM RT WHERE AL_ID=12393
+DELETE FROM RT WHERE AL_ID=12394
+DELETE FROM RT WHERE AL_ID=12395
+DELETE FROM RT WHERE AL_ID=12396
+DELETE FROM RT WHERE AL_ID=12397
+DELETE FROM RT WHERE AL_ID=12398
+DELETE FROM RT WHERE AL_ID=12399
+DELETE FROM RT WHERE AL_ID=12400
+DELETE FROM RT WHERE AL_ID=12401
+DELETE FROM RT WHERE AL_ID=12402
+DELETE FROM RT WHERE AL_ID=12403
+DELETE FROM RT WHERE AL_ID=12404
+DELETE FROM RT WHERE AL_ID=12405
+DELETE FROM RT WHERE AL_ID=12406
+DELETE FROM RT WHERE AL_ID=12407
+DELETE FROM RT WHERE AL_ID=12408
+DELETE FROM RT WHERE AL_ID=12409
+DELETE FROM RT WHERE AL_ID=12410
+DELETE FROM RT WHERE AL_ID=12411
+DELETE FROM RT WHERE AL_ID=12412
+DELETE FROM RT WHERE AL_ID=12413
+DELETE FROM RT WHERE AL_ID=12414
+DELETE FROM RT WHERE AL_ID=12415
+DELETE FROM RT WHERE AL_ID=12416
+DELETE FROM RT WHERE AL_ID=12417
+DELETE FROM RT WHERE AL_ID=12418
+DELETE FROM RT WHERE AL_ID=12419
+DELETE FROM RT WHERE AL_ID=12420
+DELETE FROM RT WHERE AL_ID=12421
+DELETE FROM RT WHERE AL_ID=12422
+DELETE FROM RT WHERE AL_ID=12423
+DELETE FROM RT WHERE AL_ID=12424
+DELETE FROM RT WHERE AL_ID=12425
+DELETE FROM RT WHERE AL_ID=12426
+DELETE FROM RT WHERE AL_ID=12427
+DELETE FROM RT WHERE AL_ID=12428
+DELETE FROM RT WHERE AL_ID=12429
+DELETE FROM RT WHERE AL_ID=12430
+DELETE FROM RT WHERE AL_ID=12431
+DELETE FROM RT WHERE AL_ID=12432
+DELETE FROM RT WHERE AL_ID=12433
+DELETE FROM RT WHERE AL_ID=12434
+DELETE FROM RT WHERE AL_ID=12435
+DELETE FROM RT WHERE AL_ID=12436
+DELETE FROM RT WHERE AL_ID=12437
+DELETE FROM RT WHERE AL_ID=12438
+DELETE FROM RT WHERE AL_ID=12439
+DELETE FROM RT WHERE AL_ID=12440
+DELETE FROM RT WHERE AL_ID=12441
+DELETE FROM RT WHERE AL_ID=12442
+DELETE FROM RT WHERE AL_ID=12443
+DELETE FROM RT WHERE AL_ID=12444
+DELETE FROM RT WHERE AL_ID=12445
+DELETE FROM RT WHERE AL_ID=12446
+DELETE FROM RT WHERE AL_ID=12447
+DELETE FROM RT WHERE AL_ID=12448
+DELETE FROM RT WHERE AL_ID=12449
+DELETE FROM RT WHERE AL_ID=12450
+DELETE FROM RT WHERE AL_ID=12451
+DELETE FROM RT WHERE AL_ID=12452
+DELETE FROM RT WHERE AL_ID=12453
+DELETE FROM RT WHERE AL_ID=12454
+DELETE FROM RT WHERE AL_ID=12455
+DELETE FROM RT WHERE AL_ID=12456
+DELETE FROM RT WHERE AL_ID=12457
+DELETE FROM RT WHERE AL_ID=12458
+DELETE FROM RT WHERE AL_ID=12459
+DELETE FROM RT WHERE AL_ID=12460
+DELETE FROM RT WHERE AL_ID=12461
+DELETE FROM RT WHERE AL_ID=12462
+DELETE FROM RT WHERE AL_ID=12463
+DELETE FROM RT WHERE AL_ID=12464
+DELETE FROM RT WHERE AL_ID=12465
+DELETE FROM RT WHERE AL_ID=12466
+DELETE FROM RT WHERE AL_ID=12467
+DELETE FROM RT WHERE AL_ID=12468
+DELETE FROM RT WHERE AL_ID=12469
+DELETE FROM RT WHERE AL_ID=12470
+DELETE FROM RT WHERE AL_ID=12471
+DELETE FROM RT WHERE AL_ID=12472
+DELETE FROM RT WHERE AL_ID=12473
+DELETE FROM RT WHERE AL_ID=12474
+DELETE FROM RT WHERE AL_ID=12475
+DELETE FROM RT WHERE AL_ID=12476
+DELETE FROM RT WHERE AL_ID=12477
+DELETE FROM RT WHERE AL_ID=12478
+DELETE FROM RT WHERE AL_ID=12479
+DELETE FROM RT WHERE AL_ID=12480
+DELETE FROM RT WHERE AL_ID=12481
+DELETE FROM RT WHERE AL_ID=12482
+DELETE FROM RT WHERE AL_ID=12483
+DELETE FROM RT WHERE AL_ID=12484
+DELETE FROM RT WHERE AL_ID=12485
+DELETE FROM RT WHERE AL_ID=12486
+DELETE FROM RT WHERE AL_ID=12487
+DELETE FROM RT WHERE AL_ID=12488
+DELETE FROM RT WHERE AL_ID=12489
+DELETE FROM RT WHERE AL_ID=12490
+DELETE FROM RT WHERE AL_ID=12491
+DELETE FROM RT WHERE AL_ID=12492
+DELETE FROM RT WHERE AL_ID=12493
+DELETE FROM RT WHERE AL_ID=12494
+DELETE FROM RT WHERE AL_ID=12495
+DELETE FROM RT WHERE AL_ID=12496
+DELETE FROM RT WHERE AL_ID=12497
+DELETE FROM RT WHERE AL_ID=12498
+DELETE FROM RT WHERE AL_ID=12499
+DELETE FROM RT WHERE AL_ID=12500
+DELETE FROM RT WHERE AL_ID=12501
+DELETE FROM RT WHERE AL_ID=12502
+DELETE FROM RT WHERE AL_ID=12503
+DELETE FROM RT WHERE AL_ID=12504
+DELETE FROM RT WHERE AL_ID=12505
+DELETE FROM RT WHERE AL_ID=12506
+DELETE FROM RT WHERE AL_ID=12507
+DELETE FROM RT WHERE AL_ID=12508
+DELETE FROM RT WHERE AL_ID=12509
+DELETE FROM RT WHERE AL_ID=12510
+DELETE FROM RT WHERE AL_ID=12511
+DELETE FROM RT WHERE AL_ID=12512
+DELETE FROM RT WHERE AL_ID=12513
+DELETE FROM RT WHERE AL_ID=12514
+DELETE FROM RT WHERE AL_ID=12515
+DELETE FROM RT WHERE AL_ID=12516
+DELETE FROM RT WHERE AL_ID=12517
+DELETE FROM RT WHERE AL_ID=12518
+DELETE FROM RT WHERE AL_ID=12519
+DELETE FROM RT WHERE AL_ID=12520
+DELETE FROM RT WHERE AL_ID=12521
+DELETE FROM RT WHERE AL_ID=12522
+DELETE FROM RT WHERE AL_ID=12523
+DELETE FROM RT WHERE AL_ID=12524
+DELETE FROM RT WHERE AL_ID=12525
+DELETE FROM RT WHERE AL_ID=12526
+DELETE FROM RT WHERE AL_ID=12527
+DELETE FROM RT WHERE AL_ID=12528
+DELETE FROM RT WHERE AL_ID=12529
+DELETE FROM RT WHERE AL_ID=12530
+DELETE FROM RT WHERE AL_ID=12531
+DELETE FROM RT WHERE AL_ID=12532
+DELETE FROM RT WHERE AL_ID=12533
+DELETE FROM RT WHERE AL_ID=12534
+DELETE FROM RT WHERE AL_ID=12535
+DELETE FROM RT WHERE AL_ID=12536
+DELETE FROM RT WHERE AL_ID=12537
+DELETE FROM RT WHERE AL_ID=12538
+DELETE FROM RT WHERE AL_ID=12539
+DELETE FROM RT WHERE AL_ID=12540
+DELETE FROM RT WHERE AL_ID=12541
+DELETE FROM RT WHERE AL_ID=12542
+DELETE FROM RT WHERE AL_ID=12543
+DELETE FROM RT WHERE AL_ID=12544
+DELETE FROM RT WHERE AL_ID=12545
+DELETE FROM RT WHERE AL_ID=12546
+DELETE FROM RT WHERE AL_ID=12547
+DELETE FROM RT WHERE AL_ID=12548
+DELETE FROM RT WHERE AL_ID=12549
+DELETE FROM RT WHERE AL_ID=12550
+DELETE FROM RT WHERE AL_ID=12551
+DELETE FROM RT WHERE AL_ID=12552
+DELETE FROM RT WHERE AL_ID=12553
+DELETE FROM RT WHERE AL_ID=12554
+DELETE FROM RT WHERE AL_ID=12555
+DELETE FROM RT WHERE AL_ID=12556
+DELETE FROM RT WHERE AL_ID=12557
+DELETE FROM RT WHERE AL_ID=12558
+DELETE FROM RT WHERE AL_ID=12559
+DELETE FROM RT WHERE AL_ID=12560
+DELETE FROM RT WHERE AL_ID=12561
+DELETE FROM RT WHERE AL_ID=12562
+DELETE FROM RT WHERE AL_ID=12563
+DELETE FROM RT WHERE AL_ID=12564
+DELETE FROM RT WHERE AL_ID=12565
+DELETE FROM RT WHERE AL_ID=12566
+DELETE FROM RT WHERE AL_ID=12567
+DELETE FROM RT WHERE AL_ID=12568
+DELETE FROM RT WHERE AL_ID=12569
+DELETE FROM RT WHERE AL_ID=12570
+DELETE FROM RT WHERE AL_ID=12571
+DELETE FROM RT WHERE AL_ID=12572
+DELETE FROM RT WHERE AL_ID=12573
+DELETE FROM RT WHERE AL_ID=12574
+DELETE FROM RT WHERE AL_ID=12575
+DELETE FROM RT WHERE AL_ID=12576
+DELETE FROM RT WHERE AL_ID=12577
+DELETE FROM RT WHERE AL_ID=12578
+DELETE FROM RT WHERE AL_ID=12579
+DELETE FROM RT WHERE AL_ID=12580
+DELETE FROM RT WHERE AL_ID=12581
+DELETE FROM RT WHERE AL_ID=12582
+DELETE FROM RT WHERE AL_ID=12583
+DELETE FROM RT WHERE AL_ID=12584
+DELETE FROM RT WHERE AL_ID=12585
+DELETE FROM RT WHERE AL_ID=12586
+DELETE FROM RT WHERE AL_ID=12587
+DELETE FROM RT WHERE AL_ID=12588
+DELETE FROM RT WHERE AL_ID=12589
+DELETE FROM RT WHERE AL_ID=12590
+DELETE FROM RT WHERE AL_ID=12591
+DELETE FROM RT WHERE AL_ID=12592
+DELETE FROM RT WHERE AL_ID=12593
+DELETE FROM RT WHERE AL_ID=12594
+DELETE FROM RT WHERE AL_ID=12595
+DELETE FROM RT WHERE AL_ID=12596
+DELETE FROM RT WHERE AL_ID=12597
+DELETE FROM RT WHERE AL_ID=12598
+DELETE FROM RT WHERE AL_ID=12599
+DELETE FROM RT WHERE AL_ID=12600
+DELETE FROM RT WHERE AL_ID=12601
+DELETE FROM RT WHERE AL_ID=12602
+DELETE FROM RT WHERE AL_ID=12603
+DELETE FROM RT WHERE AL_ID=12604
+DELETE FROM RT WHERE AL_ID=12605
+DELETE FROM RT WHERE AL_ID=12606
+DELETE FROM RT WHERE AL_ID=12607
+DELETE FROM RT WHERE AL_ID=12608
+DELETE FROM RT WHERE AL_ID=12609
+DELETE FROM RT WHERE AL_ID=12610
+DELETE FROM RT WHERE AL_ID=12611
+DELETE FROM RT WHERE AL_ID=12612
+DELETE FROM RT WHERE AL_ID=12613
+DELETE FROM RT WHERE AL_ID=12614
+DELETE FROM RT WHERE AL_ID=12615
+DELETE FROM RT WHERE AL_ID=12616
+DELETE FROM RT WHERE AL_ID=12617
+DELETE FROM RT WHERE AL_ID=12618
+DELETE FROM RT WHERE AL_ID=12619
+DELETE FROM RT WHERE AL_ID=12620
+DELETE FROM RT WHERE AL_ID=12621
+DELETE FROM RT WHERE AL_ID=12622
+DELETE FROM RT WHERE AL_ID=12623
+DELETE FROM RT WHERE AL_ID=12624
+DELETE FROM RT WHERE AL_ID=12625
+DELETE FROM RT WHERE AL_ID=12626
+DELETE FROM RT WHERE AL_ID=12627
+DELETE FROM RT WHERE AL_ID=12628
+DELETE FROM RT WHERE AL_ID=12629
+INSERT INTO RT VALUES(12630,'2020-03-13 00:00:00.000000',2.04118678587173E0)
+INSERT INTO RT VALUES(12631,'2020-03-14 00:00:00.000000',2.07748474561051E0)
+INSERT INTO RT VALUES(12632,'2020-03-15 00:00:00.000000',2.11840343457315E0)
+INSERT INTO RT VALUES(12633,'2020-03-16 00:00:00.000000',2.12288884951984E0)
+INSERT INTO RT VALUES(12634,'2020-03-17 00:00:00.000000',2.06448965531674E0)
+INSERT INTO RT VALUES(12635,'2020-03-18 00:00:00.000000',1.92516470319194E0)
+INSERT INTO RT VALUES(12636,'2020-03-19 00:00:00.000000',1.74047662665615E0)
+INSERT INTO RT VALUES(12637,'2020-03-20 00:00:00.000000',1.56582432934891E0)
+INSERT INTO RT VALUES(12638,'2020-03-21 00:00:00.000000',1.42162942918018E0)
+INSERT INTO RT VALUES(12639,'2020-03-22 00:00:00.000000',1.30974281909542E0)
+INSERT INTO RT VALUES(12640,'2020-03-23 00:00:00.000000',1.22835587371968E0)
+INSERT INTO RT VALUES(12641,'2020-03-24 00:00:00.000000',1.17647852434512E0)
+INSERT INTO RT VALUES(12642,'2020-03-25 00:00:00.000000',1.14817766983966E0)
+INSERT INTO RT VALUES(12643,'2020-03-26 00:00:00.000000',1.13274872941505E0)
+INSERT INTO RT VALUES(12644,'2020-03-27 00:00:00.000000',1.12374552929039E0)
+INSERT INTO RT VALUES(12645,'2020-03-28 00:00:00.000000',1.11758778074044E0)
+INSERT INTO RT VALUES(12646,'2020-03-29 00:00:00.000000',1.11443433513832E0)
+INSERT INTO RT VALUES(12647,'2020-03-30 00:00:00.000000',1.11424751668543E0)
+INSERT INTO RT VALUES(12648,'2020-03-31 00:00:00.000000',1.11630381326207E0)
+INSERT INTO RT VALUES(12649,'2020-04-01 00:00:00.000000',1.12068678394418E0)
+INSERT INTO RT VALUES(12650,'2020-04-02 00:00:00.000000',1.12648286635971E0)
+INSERT INTO RT VALUES(12651,'2020-04-03 00:00:00.000000',1.1328153641026E0)
+INSERT INTO RT VALUES(12652,'2020-04-04 00:00:00.000000',1.13888734425837E0)
+INSERT INTO RT VALUES(12653,'2020-04-05 00:00:00.000000',1.14332484555682E0)
+INSERT INTO RT VALUES(12654,'2020-04-06 00:00:00.000000',1.14447744831888E0)
+INSERT INTO RT VALUES(12655,'2020-04-07 00:00:00.000000',1.14030864610869E0)
+INSERT INTO RT VALUES(12656,'2020-04-08 00:00:00.000000',1.12968449457227E0)
+INSERT INTO RT VALUES(12657,'2020-04-09 00:00:00.000000',1.11313284518794E0)
+INSERT INTO RT VALUES(12658,'2020-04-10 00:00:00.000000',1.09211484322836E0)
+INSERT INTO RT VALUES(12659,'2020-04-11 00:00:00.000000',1.06709432142899E0)
+INSERT INTO RT VALUES(12660,'2020-04-12 00:00:00.000000',1.03993282047702E0)
+INSERT INTO RT VALUES(12661,'2020-04-13 00:00:00.000000',1.01329099567793E0)
+INSERT INTO RT VALUES(12662,'2020-04-14 00:00:00.000000',0.988779542501857E0)
+INSERT INTO RT VALUES(12663,'2020-04-15 00:00:00.000000',0.96781604339891E0)
+INSERT INTO RT VALUES(12664,'2020-04-16 00:00:00.000000',0.950880949314304E0)
+INSERT INTO RT VALUES(12665,'2020-04-17 00:00:00.000000',0.939899830023429E0)
+INSERT INTO RT VALUES(12666,'2020-04-18 00:00:00.000000',0.936273815147524E0)
+INSERT INTO RT VALUES(12667,'2020-04-19 00:00:00.000000',0.939949853206084E0)
+INSERT INTO RT VALUES(12668,'2020-04-20 00:00:00.000000',0.949665682849579E0)
+INSERT INTO RT VALUES(12669,'2020-04-21 00:00:00.000000',0.963491147496011E0)
+INSERT INTO RT VALUES(12670,'2020-04-22 00:00:00.000000',0.979457287839456E0)
+INSERT INTO RT VALUES(12671,'2020-04-23 00:00:00.000000',0.994730287911849E0)
+INSERT INTO RT VALUES(12672,'2020-04-24 00:00:00.000000',1.00646030847415E0)
+INSERT INTO RT VALUES(12673,'2020-04-25 00:00:00.000000',1.01309670624788E0)
+INSERT INTO RT VALUES(12674,'2020-04-26 00:00:00.000000',1.01407791680059E0)
+INSERT INTO RT VALUES(12675,'2020-04-27 00:00:00.000000',1.00981346963162E0)
+INSERT INTO RT VALUES(12676,'2020-04-28 00:00:00.000000',1.00051491409801E0)
+INSERT INTO RT VALUES(12677,'2020-04-29 00:00:00.000000',0.986661517661534E0)
+INSERT INTO RT VALUES(12678,'2020-04-30 00:00:00.000000',0.970291521748448E0)
+INSERT INTO RT VALUES(12679,'2020-05-01 00:00:00.000000',0.953400636967812E0)
+INSERT INTO RT VALUES(12680,'2020-05-02 00:00:00.000000',0.937791624287792E0)
+INSERT INTO RT VALUES(12681,'2020-05-03 00:00:00.000000',0.924421863645517E0)
+INSERT INTO RT VALUES(12682,'2020-05-04 00:00:00.000000',0.914658594655719E0)
+INSERT INTO RT VALUES(12683,'2020-05-05 00:00:00.000000',0.908376341773195E0)
+INSERT INTO RT VALUES(12684,'2020-05-06 00:00:00.000000',0.905641695273271E0)
+INSERT INTO RT VALUES(12685,'2020-05-07 00:00:00.000000',0.905003967099396E0)
+INSERT INTO RT VALUES(12686,'2020-05-08 00:00:00.000000',0.905551266271071E0)
+INSERT INTO RT VALUES(12687,'2020-05-09 00:00:00.000000',0.906423315183554E0)
+INSERT INTO RT VALUES(12688,'2020-05-10 00:00:00.000000',0.906504839960967E0)
+INSERT INTO RT VALUES(12689,'2020-05-11 00:00:00.000000',0.90555585542403E0)
+INSERT INTO RT VALUES(12690,'2020-05-12 00:00:00.000000',0.900844603386817E0)
+INSERT INTO RT VALUES(12691,'2020-05-13 00:00:00.000000',0.891662209452818E0)
+INSERT INTO RT VALUES(12692,'2020-05-14 00:00:00.000000',0.877842591510329E0)
+INSERT INTO RT VALUES(12693,'2020-05-15 00:00:00.000000',0.860147654249236E0)
+INSERT INTO RT VALUES(12694,'2020-05-16 00:00:00.000000',0.838859015459795E0)
+INSERT INTO RT VALUES(12695,'2020-05-17 00:00:00.000000',0.814951483687948E0)
+INSERT INTO RT VALUES(12696,'2020-05-18 00:00:00.000000',0.790194303841222E0)
+INSERT INTO RT VALUES(12697,'2020-05-19 00:00:00.000000',0.765404617377862E0)
+INSERT INTO RT VALUES(12698,'2020-05-20 00:00:00.000000',0.740935947704555E0)
+INSERT INTO RT VALUES(12699,'2020-05-21 00:00:00.000000',0.717197433749117E0)
+INSERT INTO RT VALUES(12700,'2020-05-22 00:00:00.000000',0.695069959947532E0)
+INSERT INTO RT VALUES(12701,'2020-05-23 00:00:00.000000',0.674936722968009E0)
+INSERT INTO RT VALUES(12702,'2020-05-24 00:00:00.000000',0.658378967352816E0)
+INSERT INTO RT VALUES(12703,'2020-05-25 00:00:00.000000',0.645639661080387E0)
+INSERT INTO RT VALUES(12704,'2020-05-26 00:00:00.000000',0.637068875488088E0)
+INSERT INTO RT VALUES(12705,'2020-05-27 00:00:00.000000',0.63268805758465E0)
+INSERT INTO RT VALUES(12706,'2020-05-28 00:00:00.000000',0.63067401545549E0)
+INSERT INTO RT VALUES(12707,'2020-05-29 00:00:00.000000',0.63173565693343E0)
+INSERT INTO RT VALUES(12708,'2020-05-30 00:00:00.000000',0.634324758824974E0)
+INSERT INTO RT VALUES(12709,'2020-05-31 00:00:00.000000',0.639687834083395E0)
+INSERT INTO RT VALUES(12710,'2020-06-01 00:00:00.000000',0.647170348841194E0)
+INSERT INTO RT VALUES(12711,'2020-06-02 00:00:00.000000',0.656673302095839E0)
+INSERT INTO RT VALUES(12712,'2020-06-03 00:00:00.000000',0.6703553479251E0)
+INSERT INTO RT VALUES(12713,'2020-06-04 00:00:00.000000',0.684192061041038E0)
+INSERT INTO RT VALUES(12714,'2020-06-05 00:00:00.000000',0.699075575440483E0)
+INSERT INTO RT VALUES(12715,'2020-06-06 00:00:00.000000',0.714193143860723E0)
+INSERT INTO RT VALUES(12716,'2020-06-07 00:00:00.000000',0.729735687946943E0)
+INSERT INTO RT VALUES(12717,'2020-06-08 00:00:00.000000',0.743986106620054E0)
+INSERT INTO RT VALUES(12718,'2020-06-09 00:00:00.000000',0.757285080412066E0)
+INSERT INTO RT VALUES(12719,'2020-06-10 00:00:00.000000',0.770037308727636E0)
+INSERT INTO RT VALUES(12720,'2020-06-11 00:00:00.000000',0.782754465352885E0)
+INSERT INTO RT VALUES(12721,'2020-06-12 00:00:00.000000',0.794639898136092E0)
+INSERT INTO RT VALUES(12722,'2020-06-13 00:00:00.000000',0.803092369161703E0)
+INSERT INTO RT VALUES(12723,'2020-06-14 00:00:00.000000',0.811173164688294E0)
+INSERT INTO RT VALUES(12724,'2020-06-15 00:00:00.000000',0.81596536869642E0)
+INSERT INTO RT VALUES(12725,'2020-06-16 00:00:00.000000',0.821170774250017E0)
+INSERT INTO RT VALUES(12726,'2020-06-17 00:00:00.000000',0.825789759214027E0)
+INSERT INTO RT VALUES(12727,'2020-06-18 00:00:00.000000',0.830348754764681E0)
+INSERT INTO RT VALUES(12728,'2020-06-19 00:00:00.000000',0.839030424160078E0)
+INSERT INTO RT VALUES(12729,'2020-06-20 00:00:00.000000',0.848352698911671E0)
+INSERT INTO RT VALUES(12730,'2020-06-21 00:00:00.000000',0.866610894251256E0)
+INSERT INTO RT VALUES(12731,'2020-06-22 00:00:00.000000',0.892211009257377E0)
+INSERT INTO RT VALUES(12732,'2020-06-23 00:00:00.000000',0.927401752941386E0)
+INSERT INTO RT VALUES(12733,'2020-06-24 00:00:00.000000',0.969419202509479E0)
+INSERT INTO RT VALUES(12734,'2020-06-25 00:00:00.000000',1.01897540179775E0)
+INSERT INTO RT VALUES(12735,'2020-06-26 00:00:00.000000',1.07627295050904E0)
+INSERT INTO RT VALUES(12736,'2020-06-27 00:00:00.000000',1.13177992976769E0)
+INSERT INTO RT VALUES(12737,'2020-06-28 00:00:00.000000',1.18768012014963E0)
+INSERT INTO RT VALUES(12738,'2020-06-29 00:00:00.000000',1.23674949090814E0)
+INSERT INTO RT VALUES(12739,'2020-06-30 00:00:00.000000',1.27522075343779E0)
+INSERT INTO RT VALUES(12740,'2020-07-01 00:00:00.000000',1.30300838107818E0)
+INSERT INTO RT VALUES(12741,'2020-07-02 00:00:00.000000',1.31904630186816E0)
+INSERT INTO RT VALUES(12742,'2020-07-03 00:00:00.000000',1.3256481073293E0)
+INSERT INTO RT VALUES(12743,'2020-07-04 00:00:00.000000',1.32550572219234E0)
+INSERT INTO RT VALUES(12744,'2020-07-05 00:00:00.000000',1.32110918884724E0)
+INSERT INTO RT VALUES(12745,'2020-07-06 00:00:00.000000',1.31612400368792E0)
+INSERT INTO RT VALUES(12746,'2020-07-07 00:00:00.000000',1.30677098709137E0)
+INSERT INTO RT VALUES(12747,'2020-07-08 00:00:00.000000',1.29274738027105E0)
+INSERT INTO RT VALUES(12748,'2020-07-09 00:00:00.000000',1.27357212817179E0)
+INSERT INTO RT VALUES(12749,'2020-07-10 00:00:00.000000',1.25053492422975E0)
+INSERT INTO RT VALUES(12750,'2020-07-11 00:00:00.000000',1.22264433888035E0)
+INSERT INTO RT VALUES(12751,'2020-07-12 00:00:00.000000',1.19058470821458E0)
+INSERT INTO RT VALUES(12752,'2020-07-13 00:00:00.000000',1.15614580883058E0)
+INSERT INTO RT VALUES(12753,'2020-07-14 00:00:00.000000',1.12079668428022E0)
+INSERT INTO RT VALUES(12754,'2020-07-15 00:00:00.000000',1.08563869165432E0)
+INSERT INTO RT VALUES(12755,'2020-07-16 00:00:00.000000',1.04915256797177E0)
+INSERT INTO RT VALUES(12756,'2020-07-17 00:00:00.000000',1.01379326021275E0)
+INSERT INTO RT VALUES(12757,'2020-07-18 00:00:00.000000',0.980515745424565E0)
+INSERT INTO RT VALUES(12758,'2020-07-19 00:00:00.000000',0.952161463874559E0)
+INSERT INTO RT VALUES(12759,'2020-07-20 00:00:00.000000',0.927219115184988E0)
+INSERT INTO RT VALUES(12760,'2020-07-21 00:00:00.000000',0.907063850178953E0)
+INSERT INTO RT VALUES(12761,'2020-07-22 00:00:00.000000',0.891777851297119E0)
+INSERT INTO RT VALUES(12762,'2020-07-23 00:00:00.000000',0.882491650540206E0)
+INSERT INTO RT VALUES(12763,'2020-07-24 00:00:00.000000',0.87621249731867E0)
+INSERT INTO RT VALUES(12764,'2020-07-25 00:00:00.000000',0.873119856526746E0)
+INSERT INTO RT VALUES(12765,'2020-07-26 00:00:00.000000',0.87343623969562E0)
+INSERT INTO RT VALUES(12766,'2020-07-27 00:00:00.000000',0.875320130642031E0)
+INSERT INTO RT VALUES(12767,'2020-07-28 00:00:00.000000',0.875865814347538E0)
+INSERT INTO RT VALUES(12768,'2020-07-29 00:00:00.000000',0.873249988078258E0)
+INSERT INTO RT VALUES(12769,'2020-07-30 00:00:00.000000',0.869472959742186E0)
+INSERT INTO RT VALUES(12770,'2020-07-31 00:00:00.000000',0.8633213180289E0)
+INSERT INTO RT VALUES(12771,'2020-08-01 00:00:00.000000',0.852554279461073E0)
+INSERT INTO RT VALUES(12772,'2020-08-02 00:00:00.000000',0.840105163075929E0)
+INSERT INTO RT VALUES(12773,'2020-08-03 00:00:00.000000',0.828952286231516E0)
+INSERT INTO RT VALUES(12774,'2020-08-04 00:00:00.000000',0.815269500441853E0)
+INSERT INTO RT VALUES(12775,'2020-08-05 00:00:00.000000',0.80369942793142E0)
+INSERT INTO RT VALUES(12776,'2020-08-06 00:00:00.000000',0.794369456711102E0)
+INSERT INTO RT VALUES(12777,'2020-08-07 00:00:00.000000',0.790452951995146E0)
+INSERT INTO RT VALUES(12778,'2020-08-08 00:00:00.000000',0.79392283090525E0)
+INSERT INTO RT VALUES(12779,'2020-08-09 00:00:00.000000',0.805195144290362E0)
+INSERT INTO RT VALUES(12780,'2020-08-10 00:00:00.000000',0.831664080718056E0)
+INSERT INTO RT VALUES(12781,'2020-08-11 00:00:00.000000',0.866001056605791E0)
+INSERT INTO RT VALUES(12782,'2020-08-12 00:00:00.000000',0.909054494797864E0)
+INSERT INTO RT VALUES(12783,'2020-08-13 00:00:00.000000',0.961121305701007E0)
+INSERT INTO RT VALUES(12784,'2020-08-14 00:00:00.000000',1.01795553212089E0)
+INSERT INTO RT VALUES(12785,'2020-08-15 00:00:00.000000',1.07950243182678E0)
+INSERT INTO RT VALUES(12786,'2020-08-16 00:00:00.000000',1.14124751857067E0)
+INSERT INTO RT VALUES(12787,'2020-08-17 00:00:00.000000',1.20275057131914E0)
+INSERT INTO RT VALUES(12788,'2020-08-18 00:00:00.000000',1.25731430831151E0)
+INSERT INTO RT VALUES(12789,'2020-08-19 00:00:00.000000',1.30761773060005E0)
+INSERT INTO RT VALUES(12790,'2020-08-20 00:00:00.000000',1.34825944074097E0)
+INSERT INTO RT VALUES(12791,'2020-08-21 00:00:00.000000',1.38297763390761E0)
+INSERT INTO RT VALUES(12792,'2020-08-22 00:00:00.000000',1.41168062359577E0)
+INSERT INTO RT VALUES(12793,'2020-08-23 00:00:00.000000',1.43336605747212E0)
+INSERT INTO RT VALUES(12794,'2020-08-24 00:00:00.000000',1.44911504537726E0)
+INSERT INTO RT VALUES(12795,'2020-08-25 00:00:00.000000',1.45793429752191E0)
+INSERT INTO RT VALUES(12796,'2020-08-26 00:00:00.000000',1.45933248616564E0)
+INSERT INTO RT VALUES(12797,'2020-08-27 00:00:00.000000',1.44957677245878E0)
+INSERT INTO RT VALUES(12798,'2020-08-28 00:00:00.000000',1.43367230662505E0)
+INSERT INTO RT VALUES(12799,'2020-08-29 00:00:00.000000',1.41338312852918E0)
+INSERT INTO RT VALUES(12800,'2020-08-30 00:00:00.000000',1.39066453079423E0)
+INSERT INTO RT VALUES(12801,'2020-08-31 00:00:00.000000',1.36647136038397E0)
+INSERT INTO RT VALUES(12802,'2020-09-01 00:00:00.000000',1.34127458842886E0)
+INSERT INTO RT VALUES(12803,'2020-09-02 00:00:00.000000',1.31794778241767E0)
+INSERT INTO RT VALUES(12804,'2020-09-03 00:00:00.000000',1.29379911654098E0)
+INSERT INTO RT VALUES(12805,'2020-09-04 00:00:00.000000',1.27407182858484E0)
+INSERT INTO RT VALUES(12806,'2020-09-05 00:00:00.000000',1.2629912438867E0)
+INSERT INTO RT VALUES(12807,'2020-09-06 00:00:00.000000',1.25897428399196E0)
+INSERT INTO RT VALUES(12808,'2020-09-07 00:00:00.000000',1.26371280091882E0)
+INSERT INTO RT VALUES(12809,'2020-09-08 00:00:00.000000',1.27174768342779E0)
+INSERT INTO RT VALUES(12810,'2020-09-09 00:00:00.000000',1.28076724159411E0)
+INSERT INTO RT VALUES(12811,'2020-09-10 00:00:00.000000',1.28728814408725E0)
+INSERT INTO RT VALUES(12812,'2020-09-11 00:00:00.000000',1.29467962086517E0)
+INSERT INTO RT VALUES(12813,'2020-09-12 00:00:00.000000',1.30936964133727E0)
+INSERT INTO RT VALUES(12814,'2020-09-13 00:00:00.000000',1.33215209530424E0)
+INSERT INTO RT VALUES(12815,'2020-09-14 00:00:00.000000',1.36206595720873E0)
+INSERT INTO RT VALUES(12816,'2020-09-15 00:00:00.000000',1.3930265415313E0)
+INSERT INTO RT VALUES(12817,'2020-09-16 00:00:00.000000',1.41815868121135E0)
+INSERT INTO RT VALUES(12818,'2020-09-17 00:00:00.000000',1.43112802896329E0)
+INSERT INTO RT VALUES(12819,'2020-09-18 00:00:00.000000',1.4311400452005E0)
+INSERT INTO RT VALUES(12820,'2020-09-19 00:00:00.000000',1.41667976828194E0)
+INSERT INTO RT VALUES(12821,'2020-09-20 00:00:00.000000',1.3894209359075E0)
+INSERT INTO RT VALUES(12822,'2020-09-21 00:00:00.000000',1.35355349249243E0)
+INSERT INTO RT VALUES(12823,'2020-09-22 00:00:00.000000',1.31191629523038E0)
+INSERT INTO RT VALUES(12824,'2020-09-23 00:00:00.000000',1.26432965561756E0)
+INSERT INTO RT VALUES(12825,'2020-09-24 00:00:00.000000',1.21153572146573E0)
+INSERT INTO RT VALUES(12826,'2020-09-25 00:00:00.000000',1.15813393949785E0)
+INSERT INTO RT VALUES(12827,'2020-09-26 00:00:00.000000',1.10826284632617E0)
+INSERT INTO RT VALUES(12828,'2020-09-27 00:00:00.000000',1.06366432202522E0)
+INSERT INTO RT VALUES(12829,'2020-09-28 00:00:00.000000',1.02489036918944E0)
+INSERT INTO RT VALUES(12830,'2020-09-29 00:00:00.000000',0.992552418999213E0)
+INSERT INTO RT VALUES(12831,'2020-09-30 00:00:00.000000',0.966256940680923E0)
+INSERT INTO RT VALUES(12832,'2020-10-01 00:00:00.000000',0.945131144008325E0)
+INSERT INTO RT VALUES(12833,'2020-10-02 00:00:00.000000',0.928755926252955E0)
+INSERT INTO RT VALUES(12834,'2020-10-03 00:00:00.000000',0.917717516028873E0)
+INSERT INTO RT VALUES(12835,'2020-10-04 00:00:00.000000',0.913389229605892E0)
+INSERT INTO RT VALUES(12836,'2020-10-05 00:00:00.000000',0.91623108193758E0)
+INSERT INTO RT VALUES(12837,'2020-10-06 00:00:00.000000',0.924934955230727E0)
+INSERT INTO RT VALUES(12838,'2020-10-07 00:00:00.000000',0.937374166143726E0)
+INSERT INTO RT VALUES(12839,'2020-10-08 00:00:00.000000',0.950938349773034E0)
+INSERT INTO RT VALUES(12840,'2020-10-09 00:00:00.000000',0.964302153595909E0)
+INSERT INTO RT VALUES(12841,'2020-10-10 00:00:00.000000',0.976180135282508E0)
+INSERT INTO RT VALUES(12842,'2020-10-11 00:00:00.000000',0.986230491442291E0)
+INSERT INTO RT VALUES(12843,'2020-10-12 00:00:00.000000',0.994182236969619E0)
+INSERT INTO RT VALUES(12844,'2020-10-13 00:00:00.000000',0.999755483661689E0)
+INSERT INTO RT VALUES(12845,'2020-10-14 00:00:00.000000',1.00335794389115E0)
+INSERT INTO RT VALUES(12846,'2020-10-15 00:00:00.000000',1.00465781792876E0)
+INSERT INTO RT VALUES(12847,'2020-10-16 00:00:00.000000',1.00404923046421E0)
+INSERT INTO RT VALUES(12848,'2020-10-17 00:00:00.000000',1.00213433191447E0)
+INSERT INTO RT VALUES(12849,'2020-10-18 00:00:00.000000',1.00056427738416E0)
+INSERT INTO RT VALUES(12850,'2020-10-19 00:00:00.000000',1.00093287054859E0)
+INSERT INTO RT VALUES(12851,'2020-10-20 00:00:00.000000',1.00380856349907E0)
+INSERT INTO RT VALUES(12852,'2020-10-21 00:00:00.000000',1.00984830098964E0)
+INSERT INTO RT VALUES(12853,'2020-10-22 00:00:00.000000',1.01990635099829E0)
+INSERT INTO RT VALUES(12854,'2020-10-23 00:00:00.000000',1.03406237108923E0)
+INSERT INTO RT VALUES(12855,'2020-10-24 00:00:00.000000',1.05172675073617E0)
+INSERT INTO RT VALUES(12856,'2020-10-25 00:00:00.000000',1.07234943840655E0)
+INSERT INTO RT VALUES(12857,'2020-10-26 00:00:00.000000',1.09492037055717E0)
+INSERT INTO RT VALUES(12858,'2020-10-27 00:00:00.000000',1.11738191279625E0)
+INSERT INTO RT VALUES(12859,'2020-10-28 00:00:00.000000',1.13731417229308E0)
+INSERT INTO RT VALUES(12860,'2020-10-29 00:00:00.000000',1.15263661329392E0)
+INSERT INTO RT VALUES(12861,'2020-10-30 00:00:00.000000',1.16311229323098E0)
+INSERT INTO RT VALUES(12862,'2020-10-31 00:00:00.000000',1.16798622722297E0)
+INSERT INTO RT VALUES(12863,'2020-11-01 00:00:00.000000',1.16545147488588E0)
+INSERT INTO RT VALUES(12864,'2020-11-02 00:00:00.000000',1.15495683527269E0)
+INSERT INTO RT VALUES(12865,'2020-11-03 00:00:00.000000',1.13666286212713E0)
+INSERT INTO RT VALUES(12866,'2020-11-04 00:00:00.000000',1.11170231030948E0)
+INSERT INTO RT VALUES(12867,'2020-11-05 00:00:00.000000',1.08161406662831E0)
+INSERT INTO RT VALUES(12868,'2020-11-06 00:00:00.000000',1.04792576851834E0)
+INSERT INTO RT VALUES(12869,'2020-11-07 00:00:00.000000',1.01447766200193E0)
+INSERT INTO RT VALUES(12870,'2020-11-08 00:00:00.000000',0.984399713809797E0)
+INSERT INTO RT VALUES(12871,'2020-11-09 00:00:00.000000',0.959441450799459E0)
+INSERT INTO RT VALUES(12872,'2020-11-10 00:00:00.000000',0.94065461578702E0)
+INSERT INTO RT VALUES(12873,'2020-11-11 00:00:00.000000',0.927562464651574E0)
+INSERT INTO RT VALUES(12874,'2020-11-12 00:00:00.000000',0.92134908478494E0)
+INSERT INTO RT VALUES(12875,'2020-11-13 00:00:00.000000',0.922823721670257E0)
+INSERT INTO RT VALUES(12876,'2020-11-14 00:00:00.000000',0.931759586193242E0)
+INSERT INTO RT VALUES(12877,'2020-11-15 00:00:00.000000',0.947976582666103E0)
+INSERT INTO RT VALUES(12878,'2020-11-16 00:00:00.000000',0.970461038397735E0)
+INSERT INTO RT VALUES(12879,'2020-11-17 00:00:00.000000',0.998410503278028E0)
+INSERT INTO RT VALUES(12880,'2020-11-18 00:00:00.000000',1.02954821040304E0)
+INSERT INTO RT VALUES(12881,'2020-11-19 00:00:00.000000',1.06128707529718E0)
+INSERT INTO RT VALUES(12882,'2020-11-20 00:00:00.000000',1.09181271978185E0)
+INSERT INTO RT VALUES(12883,'2020-11-21 00:00:00.000000',1.11915777933489E0)
+INSERT INTO RT VALUES(12884,'2020-11-22 00:00:00.000000',1.14147244244023E0)
+INSERT INTO RT VALUES(12885,'2020-11-23 00:00:00.000000',1.15747551115616E0)
+INSERT INTO RT VALUES(12886,'2020-11-24 00:00:00.000000',1.16682953154732E0)
+INSERT INTO RT VALUES(12887,'2020-11-25 00:00:00.000000',1.16976823692024E0)
+INSERT INTO RT VALUES(12888,'2020-11-26 00:00:00.000000',1.16735824046375E0)
+INSERT INTO RT VALUES(12889,'2020-11-27 00:00:00.000000',1.16155852982019E0)
+INSERT INTO RT VALUES(12890,'2020-11-28 00:00:00.000000',1.15405538533781E0)
+INSERT INTO RT VALUES(12891,'2020-11-29 00:00:00.000000',1.14612893593805E0)
+INSERT INTO RT VALUES(12892,'2020-11-30 00:00:00.000000',1.13837338122128E0)
+INSERT INTO RT VALUES(12893,'2020-12-01 00:00:00.000000',1.13057110090841E0)
+INSERT INTO RT VALUES(12894,'2020-12-02 00:00:00.000000',1.12234209975971E0)
+INSERT INTO RT VALUES(12895,'2020-12-03 00:00:00.000000',1.11392413235807E0)
+INSERT INTO RT VALUES(12896,'2020-12-04 00:00:00.000000',1.10657487349357E0)
+INSERT INTO RT VALUES(12897,'2020-12-05 00:00:00.000000',1.1007416135539E0)
+INSERT INTO RT VALUES(12898,'2020-12-06 00:00:00.000000',1.09666641939121E0)
+INSERT INTO RT VALUES(12899,'2020-12-07 00:00:00.000000',1.09392255623305E0)
+INSERT INTO RT VALUES(12900,'2020-12-08 00:00:00.000000',1.09181499660615E0)
+INSERT INTO RT VALUES(12901,'2020-12-09 00:00:00.000000',1.0893419290529E0)
+INSERT INTO RT VALUES(12902,'2020-12-10 00:00:00.000000',1.08614406131387E0)
+INSERT INTO RT VALUES(12903,'2020-12-11 00:00:00.000000',1.08244825014599E0)
+INSERT INTO RT VALUES(12904,'2020-12-12 00:00:00.000000',1.07821594161845E0)
+INSERT INTO RT VALUES(12905,'2020-12-13 00:00:00.000000',1.07369085099802E0)
+INSERT INTO RT VALUES(12906,'2020-12-14 00:00:00.000000',1.06898928485861E0)
+INSERT INTO RT VALUES(12907,'2020-12-15 00:00:00.000000',1.06430308829819E0)
+INSERT INTO RT VALUES(12908,'2020-12-16 00:00:00.000000',1.06056004566099E0)
+INSERT INTO RT VALUES(12909,'2020-12-17 00:00:00.000000',1.05899646979043E0)
+INSERT INTO RT VALUES(12910,'2020-12-18 00:00:00.000000',1.06034553415799E0)
+INSERT INTO RT VALUES(12911,'2020-12-19 00:00:00.000000',1.06404588279125E0)
+INSERT INTO RT VALUES(12912,'2020-12-20 00:00:00.000000',1.06912303526442E0)
+INSERT INTO RT VALUES(12913,'2020-12-21 00:00:00.000000',1.07452242646484E0)
+INSERT INTO RT VALUES(12914,'2020-12-22 00:00:00.000000',1.07855947202298E0)
+INSERT INTO RT VALUES(12915,'2020-12-23 00:00:00.000000',1.07983644935147E0)
+INSERT INTO RT VALUES(12916,'2020-12-24 00:00:00.000000',1.0778772299402E0)
+INSERT INTO RT VALUES(12917,'2020-12-25 00:00:00.000000',1.07367686729523E0)
+INSERT INTO RT VALUES(12918,'2020-12-26 00:00:00.000000',1.06754115303342E0)
+INSERT INTO RT VALUES(12919,'2020-12-27 00:00:00.000000',1.05888083158782E0)
+INSERT INTO RT VALUES(12920,'2020-12-28 00:00:00.000000',1.04673212663249E0)
+INSERT INTO RT VALUES(12921,'2020-12-29 00:00:00.000000',1.02984741344332E0)
+INSERT INTO RT VALUES(12922,'2020-12-30 00:00:00.000000',1.00815972156509E0)
+INSERT INTO RT VALUES(12923,'2020-12-31 00:00:00.000000',0.982038244985791E0)
+INSERT INTO RT VALUES(12924,'2021-01-01 00:00:00.000000',0.953255797472204E0)
+INSERT INTO RT VALUES(12925,'2021-01-02 00:00:00.000000',0.92430786001655E0)
+INSERT INTO RT VALUES(12926,'2021-01-03 00:00:00.000000',0.897045473004266E0)
+INSERT INTO RT VALUES(12927,'2021-01-04 00:00:00.000000',0.872782329365892E0)
+INSERT INTO RT VALUES(12928,'2021-01-05 00:00:00.000000',0.851368910874693E0)
+INSERT INTO RT VALUES(12929,'2021-01-06 00:00:00.000000',0.832614849782858E0)
+INSERT INTO RT VALUES(12930,'2021-01-07 00:00:00.000000',0.816666060734562E0)
+INSERT INTO RT VALUES(12931,'2021-01-08 00:00:00.000000',0.803911936440889E0)
+INSERT INTO RT VALUES(12932,'2021-01-09 00:00:00.000000',0.794486981995461E0)
+INSERT INTO RT VALUES(12933,'2021-01-10 00:00:00.000000',0.788660005748612E0)
+INSERT INTO RT VALUES(12934,'2021-01-11 00:00:00.000000',0.787066250297405E0)
+INSERT INTO RT VALUES(12935,'2021-01-12 00:00:00.000000',0.789780322740748E0)
+INSERT INTO RT VALUES(12936,'2021-01-13 00:00:00.000000',0.79582863724652E0)
+INSERT INTO RT VALUES(12937,'2021-01-14 00:00:00.000000',0.80398650262819E0)
+INSERT INTO RT VALUES(12938,'2021-01-15 00:00:00.000000',0.81372283571044E0)
+INSERT INTO RT VALUES(12939,'2021-01-16 00:00:00.000000',0.824381092071616E0)
+INSERT INTO RT VALUES(12940,'2021-01-17 00:00:00.000000',0.835317767056685E0)
+INSERT INTO RT VALUES(12941,'2021-01-18 00:00:00.000000',0.846300397846845E0)
+INSERT INTO RT VALUES(12942,'2021-01-19 00:00:00.000000',0.856855866788651E0)
+INSERT INTO RT VALUES(12943,'2021-01-20 00:00:00.000000',0.866152018723868E0)
+INSERT INTO RT VALUES(12944,'2021-01-21 00:00:00.000000',0.873425263704646E0)
+INSERT INTO RT VALUES(12945,'2021-01-22 00:00:00.000000',0.879158546710594E0)
+INSERT INTO RT VALUES(12946,'2021-01-23 00:00:00.000000',0.884122265354903E0)
+INSERT INTO RT VALUES(12947,'2021-01-24 00:00:00.000000',0.8886220184811E0)
+INSERT INTO RT VALUES(12948,'2021-01-25 00:00:00.000000',0.893248940694283E0)
+INSERT INTO RT VALUES(12949,'2021-01-26 00:00:00.000000',0.897875058796349E0)
+INSERT INTO RT VALUES(12950,'2021-01-27 00:00:00.000000',0.902283996770497E0)
+INSERT INTO RT VALUES(12951,'2021-01-28 00:00:00.000000',0.90585748323827E0)
+INSERT INTO RT VALUES(12952,'2021-01-29 00:00:00.000000',0.908542231903886E0)
+INSERT INTO RT VALUES(12953,'2021-01-30 00:00:00.000000',0.910976003782488E0)
+INSERT INTO RT VALUES(12954,'2021-01-31 00:00:00.000000',0.912883696821922E0)
+INSERT INTO RT VALUES(12955,'2021-02-01 00:00:00.000000',0.91464652451412E0)
+INSERT INTO RT VALUES(12956,'2021-02-02 00:00:00.000000',0.916107484369505E0)
+INSERT INTO RT VALUES(12957,'2021-02-03 00:00:00.000000',0.916346954696058E0)
+INSERT INTO RT VALUES(12958,'2021-02-04 00:00:00.000000',0.914844582319316E0)
+INSERT INTO RT VALUES(12959,'2021-02-05 00:00:00.000000',0.910918228981245E0)
+INSERT INTO RT VALUES(12960,'2021-02-06 00:00:00.000000',0.906008748232736E0)
+INSERT INTO RT VALUES(12961,'2021-02-07 00:00:00.000000',0.901113899011659E0)
+INSERT INTO RT VALUES(12962,'2021-02-08 00:00:00.000000',0.897027255507683E0)
+INSERT INTO RT VALUES(12963,'2021-02-09 00:00:00.000000',0.895162724804377E0)
+INSERT INTO RT VALUES(12964,'2021-02-10 00:00:00.000000',0.895247328725482E0)
+INSERT INTO RT VALUES(12965,'2021-02-11 00:00:00.000000',0.897465862375707E0)
+INSERT INTO RT VALUES(12966,'2021-02-12 00:00:00.000000',0.902059515187313E0)
+INSERT INTO RT VALUES(12967,'2021-02-13 00:00:00.000000',0.908852260778103E0)
+INSERT INTO RT VALUES(12968,'2021-02-14 00:00:00.000000',0.917334633412217E0)
+INSERT INTO RT VALUES(12969,'2021-02-15 00:00:00.000000',0.927224169751201E0)
+INSERT INTO RT VALUES(12970,'2021-02-16 00:00:00.000000',0.937601913888014E0)
+INSERT INTO RT VALUES(12971,'2021-02-17 00:00:00.000000',0.947760405767183E0)
+INSERT INTO RT VALUES(12972,'2021-02-18 00:00:00.000000',0.955966160756568E0)
+INSERT INTO RT VALUES(12973,'2021-02-19 00:00:00.000000',0.961676882088356E0)
+INSERT INTO RT VALUES(12974,'2021-02-20 00:00:00.000000',0.965380022709185E0)
+INSERT INTO RT VALUES(12975,'2021-02-21 00:00:00.000000',0.966660321961365E0)
+INSERT INTO RT VALUES(12976,'2021-02-22 00:00:00.000000',0.966473272189734E0)
+INSERT INTO RT VALUES(12977,'2021-02-23 00:00:00.000000',0.965346926137939E0)
+INSERT INTO RT VALUES(12978,'2021-02-24 00:00:00.000000',0.9636301800155E0)
+INSERT INTO RT VALUES(12979,'2021-02-25 00:00:00.000000',0.961862170785039E0)
+INSERT INTO RT VALUES(12980,'2021-02-26 00:00:00.000000',0.961502933834929E0)
+INSERT INTO RT VALUES(12981,'2021-02-27 00:00:00.000000',0.963254957606845E0)
+INSERT INTO RT VALUES(12982,'2021-02-28 00:00:00.000000',0.967553038689324E0)
+INSERT INTO RT VALUES(12983,'2021-03-01 00:00:00.000000',0.973646029646253E0)
+INSERT INTO RT VALUES(12984,'2021-03-02 00:00:00.000000',0.980921828822412E0)
+INSERT INTO RT VALUES(12985,'2021-03-03 00:00:00.000000',0.987886764272244E0)
+INSERT INTO RT VALUES(12986,'2021-03-04 00:00:00.000000',0.993639389610909E0)
+INSERT INTO RT VALUES(12987,'2021-03-05 00:00:00.000000',0.997840304284278E0)
+INSERT INTO RT VALUES(12988,'2021-03-06 00:00:00.000000',1.00094216644616E0)
+INSERT INTO RT VALUES(12989,'2021-03-07 00:00:00.000000',1.00394435889341E0)
+INSERT INTO RT VALUES(12990,'2021-03-08 00:00:00.000000',1.0082276806662E0)
+INSERT INTO RT VALUES(12991,'2021-03-09 00:00:00.000000',1.01418624298525E0)
+INSERT INTO RT VALUES(12992,'2021-03-10 00:00:00.000000',1.02173765680216E0)
+INSERT INTO RT VALUES(12993,'2021-03-11 00:00:00.000000',1.03131489444153E0)
+INSERT INTO RT VALUES(12994,'2021-03-12 00:00:00.000000',1.04342169501684E0)
+INSERT INTO RT VALUES(12995,'2021-03-13 00:00:00.000000',1.05852340911672E0)
+INSERT INTO RT VALUES(12996,'2021-03-14 00:00:00.000000',1.07633599624566E0)
+INSERT INTO RT VALUES(12997,'2021-03-15 00:00:00.000000',1.09735465791907E0)
+INSERT INTO RT VALUES(12998,'2021-03-16 00:00:00.000000',1.12025302601131E0)
+INSERT INTO RT VALUES(12999,'2021-03-17 00:00:00.000000',1.14375079924056E0)
+INSERT INTO RT VALUES(13000,'2021-03-18 00:00:00.000000',1.16672644667562E0)
+INSERT INTO RT VALUES(13001,'2021-03-19 00:00:00.000000',1.18795469344504E0)
+INSERT INTO RT VALUES(13002,'2021-03-20 00:00:00.000000',1.20624945921581E0)
+INSERT INTO RT VALUES(13003,'2021-03-21 00:00:00.000000',1.2197008993948E0)
+INSERT INTO RT VALUES(13004,'2021-03-22 00:00:00.000000',1.22797896870512E0)
+INSERT INTO RT VALUES(13005,'2021-03-23 00:00:00.000000',1.23060333061392E0)
+INSERT INTO RT VALUES(13006,'2021-03-24 00:00:00.000000',1.22861487537193E0)
+INSERT INTO RT VALUES(13007,'2021-03-25 00:00:00.000000',1.22390750469414E0)
+INSERT INTO RT VALUES(13008,'2021-03-26 00:00:00.000000',1.21811160895032E0)
+INSERT INTO RT VALUES(13009,'2021-03-27 00:00:00.000000',1.21236724861481E0)
+INSERT INTO RT VALUES(13010,'2021-03-28 00:00:00.000000',1.20695713731818E0)
+INSERT INTO RT VALUES(13011,'2021-03-29 00:00:00.000000',1.20134026210366E0)
+INSERT INTO RT VALUES(13012,'2021-03-30 00:00:00.000000',1.19396798596319E0)
+INSERT INTO RT VALUES(13013,'2021-03-31 00:00:00.000000',1.18242760738216E0)
+INSERT INTO RT VALUES(13014,'2021-04-01 00:00:00.000000',1.16491700893259E0)
+INSERT INTO RT VALUES(13015,'2021-04-02 00:00:00.000000',1.1427062175373E0)
+INSERT INTO RT VALUES(13016,'2021-04-03 00:00:00.000000',1.11693233307362E0)
+INSERT INTO RT VALUES(13017,'2021-04-04 00:00:00.000000',1.08822174284511E0)
+INSERT INTO RT VALUES(13018,'2021-04-05 00:00:00.000000',1.05682989528608E0)
+INSERT INTO RT VALUES(13019,'2021-04-06 00:00:00.000000',1.02313787088074E0)
+INSERT INTO RT VALUES(13020,'2021-04-07 00:00:00.000000',0.988590565869323E0)
+INSERT INTO RT VALUES(13021,'2021-04-08 00:00:00.000000',0.953524274459508E0)
+INSERT INTO RT VALUES(13022,'2021-04-09 00:00:00.000000',0.918807765401411E0)
+INSERT INTO RT VALUES(13023,'2021-04-10 00:00:00.000000',0.886285175790756E0)
+INSERT INTO RT VALUES(13024,'2021-04-11 00:00:00.000000',0.857623786843102E0)
+INSERT INTO RT VALUES(13025,'2021-04-12 00:00:00.000000',0.834694155049331E0)
+INSERT INTO RT VALUES(13026,'2021-04-13 00:00:00.000000',0.817956542749339E0)
+INSERT INTO RT VALUES(13027,'2021-04-14 00:00:00.000000',0.807445869388063E0)
+INSERT INTO RT VALUES(13028,'2021-04-15 00:00:00.000000',0.803254328823927E0)
+INSERT INTO RT VALUES(13029,'2021-04-16 00:00:00.000000',0.805009084710299E0)
+INSERT INTO RT VALUES(13030,'2021-04-17 00:00:00.000000',0.811712750293502E0)
+INSERT INTO RT VALUES(13031,'2021-04-18 00:00:00.000000',0.822534237556361E0)
+INSERT INTO RT VALUES(13032,'2021-04-19 00:00:00.000000',0.836364232571702E0)
+INSERT INTO RT VALUES(13033,'2021-04-20 00:00:00.000000',0.85248556366695E0)
+INSERT INTO RT VALUES(13034,'2021-04-21 00:00:00.000000',0.868858397074481E0)
+INSERT INTO RT VALUES(13035,'2021-04-22 00:00:00.000000',0.884108903179039E0)
+INSERT INTO RT VALUES(13036,'2021-04-23 00:00:00.000000',0.898018368835222E0)
+INSERT INTO RT VALUES(13037,'2021-04-24 00:00:00.000000',0.909951846909867E0)
+INSERT INTO RT VALUES(13038,'2021-04-25 00:00:00.000000',0.920076471724491E0)
+INSERT INTO RT VALUES(13039,'2021-04-26 00:00:00.000000',0.92741727073201E0)
+INSERT INTO RT VALUES(13040,'2021-04-27 00:00:00.000000',0.93199988867763E0)
+INSERT INTO RT VALUES(13041,'2021-04-28 00:00:00.000000',0.933653302919255E0)
+INSERT INTO RT VALUES(13042,'2021-04-29 00:00:00.000000',0.932978434679105E0)
+INSERT INTO RT VALUES(13043,'2021-04-30 00:00:00.000000',0.930299893895253E0)
+INSERT INTO RT VALUES(13044,'2021-05-01 00:00:00.000000',0.926228101404625E0)
+INSERT INTO RT VALUES(13045,'2021-05-02 00:00:00.000000',0.922368933824005E0)
+INSERT INTO RT VALUES(13046,'2021-05-03 00:00:00.000000',0.919145038203695E0)
+INSERT INTO RT VALUES(13047,'2021-05-04 00:00:00.000000',0.917260537230218E0)
+INSERT INTO RT VALUES(13048,'2021-05-05 00:00:00.000000',0.916066131286481E0)
+INSERT INTO RT VALUES(13049,'2021-05-06 00:00:00.000000',0.915444747815893E0)
+INSERT INTO RT VALUES(13050,'2021-05-07 00:00:00.000000',0.915246922861123E0)
+COMMIT
+DISCONNECT
